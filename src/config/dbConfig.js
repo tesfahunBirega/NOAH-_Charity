@@ -1,5 +1,8 @@
 const configs = require('./config');
-const Post = require('../models/user.model.js');
+const user = require('../models/user.model.js');
+const userProfile = require('../models/userProfile.model.js');
+const userAdmin = require('../models/userAdmin.model.js');
+
 // configuration file for TypeORM db connection
 
 module.exports = {
@@ -10,7 +13,7 @@ module.exports = {
   password: configs.mysql.pswd, // Use MySQL password configuration
   database: configs.mysql.database, // Use MySQL database configuration
   // entities: [__dirname + "/../models/*.js"],
-  entities: [Post],
+  entities: [user, userProfile, userAdmin],
 
   synchronize: configs.env === 'development' ? true : true,
   migrations: [__dirname + '/migrations/*.js'], // Path to migration files

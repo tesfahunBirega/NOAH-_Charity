@@ -1,5 +1,7 @@
 const express = require('express');
-const postRoute = require('./user.route');
+const userRoute = require('./user.route');
+const userProfileRoute = require('./userProfile.route');
+const userAdminRoute = require('./userAdmin.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -8,7 +10,15 @@ const router = express.Router();
 const defaultRoutes = [
   {
     path: '/users',
-    route: postRoute,
+    route: userRoute,
+  },
+  {
+    path: '/userProfile',
+    route: userProfileRoute,
+  },
+  {
+    path: '/userAdmin',
+    route: userAdminRoute,
   },
 ];
 
