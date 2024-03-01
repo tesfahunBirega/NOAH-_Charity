@@ -19,7 +19,7 @@ const userRepository = dataSource.getRepository(User).extend({
  */
 const createUser = async (postBody) => {
   const doc = userRepository.create(postBody);
-  return await userRepository.save(doc);
+  return userRepository.save(doc);
 };
 const login = async (credentials) => {
   const { email, password } = credentials;
@@ -54,12 +54,12 @@ const login = async (credentials) => {
  */
 
 const queryUsers = async (filter, options) => {
-  const { limit, page, sortBy } = options;
+  const { limit, page, sortByOp } = options;
 
-  return await userRepository.findAll({
+  return userRepository.findAll({
     tableName: 'user',
-    sortOptions: sortBy && { option: sortBy },
-    paginationOptions: { limit: limit, page: page },
+    sortOptions: sortByOp && { option: sortBy },
+    paginationOptions: { limit, page },
   });
 };
 
@@ -69,7 +69,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<Post>}
  */
 const getUserById = async (id) => {
-  return await userRepository.findOneBy({ id: id });
+  return userRepository.findOneBy({ id });
 };
 
 /**
@@ -79,12 +79,12 @@ const getUserById = async (id) => {
  * @returns {Promise<Post>}
  */
 const updateUserById = async (postId, updateBody) => {
-  const post = await getUserById(postId);
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+  const UserByID = await getUserById(postId);
+  if (!UserByID) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await userRepository.update({ id: postId }, updateBody);
-  return await getUserById(postId);
+  const update = await userRepository.update({ id: postId }, updateBody);
+  return update;
 };
 
 /**
@@ -97,7 +97,7 @@ const deleteUserById = async (postId) => {
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  return await userRepository.delete({ id: postId });
+  return userRepository.delete({ id: postId });
 };
 
 module.exports = {
