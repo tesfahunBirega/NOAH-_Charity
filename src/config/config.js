@@ -9,7 +9,6 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     MYSQL_USER_NAME: Joi.string().required().description('MySQL Username is required!'),
-    // MYSQL_PASSWORD: Joi.string().required().description('MySQL Password is required!'),
     MYSQL_HOST: Joi.string().required().description('MySQL Host name is required!'),
     MYSQL_PORT: Joi.number().required().description('MySQL Port is required!'),
     MYSQL_DATABASE: Joi.string().required().description('MySQL Database name is required!'),
