@@ -5,10 +5,33 @@ const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
-  // console.log('firstttttt', req.body);
+  try {
+    const { firstName, lastName, email, password } = req.body;
 
-  res.status(httpStatus.CREATED).send(user);
+    const user = await userService.createUser({ firstName, lastName, email, password });
+    // console.log('firstttttt', req.body);
+
+    res.status(httpStatus.CREATED).send(user);
+  } catch (error) {
+    // Handle any errors that occur during authentication
+    res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
+  }
+});
+
+const login = catchAsync(async (req, res) => {
+  try {
+    // Extract username and password from the request body
+    const { email, password } = req.body;
+
+    // Call the userService method to authenticate the user
+    const { user, token } = await userService.login({ email, password });
+
+    // If authentication is successful, send the user and token in the response
+    res.status(httpStatus.OK).send({ user, token });
+  } catch (error) {
+    // Handle any errors that occur during authentication
+    res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
+  }
 });
 
 const getUsers = catchAsync(async (req, res) => {
@@ -42,4 +65,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  login,
 };

@@ -10,6 +10,8 @@ router
   .post(validate(postValidation.createPost), userController.createUser)
   .get(validate(postValidation.getPosts), userController.getUsers);
 
+router.route('/login').post(userController.login);
+
 router
   .route('/:postId')
   .get(validate(postValidation.getPost), userController.getUser)

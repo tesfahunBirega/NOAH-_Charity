@@ -21,6 +21,27 @@ const createUser = async (postBody) => {
   const doc = userRepository.create(postBody);
   return await userRepository.save(doc);
 };
+const login = async (credentials) => {
+  const { email, password } = credentials;
+
+  // Retrieve the user from the database based on the email
+  const user = await userRepository.findOne({ email });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+  // Verify if the provided password matches the stored hashed password
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    throw new Error('Invalid password');
+  }
+  // Generate JWT token
+  const token = generateToken(user);
+
+  // Return the user and token
+  return { user, token };
+};
 
 /**
  * Query for users
@@ -85,4 +106,5 @@ module.exports = {
   getUserById,
   updateUserById,
   deleteUserById,
+  login,
 };
