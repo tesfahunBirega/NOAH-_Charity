@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcrypt');
 const { User } = require('../models');
 const dataSource = require('../utils/createDatabaseConnection');
 const ApiError = require('../utils/ApiError');
@@ -17,8 +18,13 @@ const userRepository = dataSource.getRepository(User).extend({
  * @param {Object} userBody
  * @returns {Promise<Post>}
  */
-const createUser = async (postBody) => {
-  const doc = userRepository.create(postBody);
+const createUser = async (ReqBody) => {
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password using the generated salt
+  const hashedPassword = await bcrypt.hash(ReqBody.password, salt);
+  ReqBody.password = hashedPassword;
+  const doc = userRepository.create(ReqBody);
   return userRepository.save(doc);
 };
 const login = async (credentials) => {
