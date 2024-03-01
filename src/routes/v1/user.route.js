@@ -1,22 +1,22 @@
 const express = require('express');
 const validate = require('../../middlewares/validate');
-const { postValidation } = require('../../validations');
+const { Validation } = require('../../validations');
 const { userController } = require('../../controllers');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(postValidation.createPost), userController.createUser)
-  .get(validate(postValidation.getPosts), userController.getUsers);
+  .post(validate(Validation.createUser), userController.createUser)
+  .get(validate(Validation.getUsers), userController.getUsers);
 
 router.route('/login').post(userController.login);
 
 router
   .route('/:postId')
-  .get(validate(postValidation.getPost), userController.getUser)
-  .patch(validate(postValidation.updatePost), userController.updateUser)
-  .delete(validate(postValidation.deletePost), userController.deleteUser);
+  .get(validate(Validation.getUser), userController.getUser)
+  .patch(validate(Validation.updateUser), userController.updateUser)
+  .delete(validate(Validation.deleteUser), userController.deleteUser);
 
 module.exports = router;
 

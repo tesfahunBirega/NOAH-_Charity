@@ -5,11 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { userAdminService } = require('../services');
 
 const createUserAdmin = catchAsync(async (req, res) => {
-  console.log('1111first', req.body);
-
   const user = await userAdminService.createUser(req.body);
-  // console.log('firstttttt', req.body);
-  console.log('22first');
 
   res.status(httpStatus.CREATED).send(user);
 });
