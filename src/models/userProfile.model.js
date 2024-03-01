@@ -16,4 +16,11 @@ module.exports = new EntitySchema({
   name: 'UserProfile',
   tableName: 'userProfiles',
   columns: new UserProfile(),
+  relations: {
+    user: {
+      type: 'one-to-many',
+      target: 'User',
+      inverseSide: 'userProfiles',
+    },
+  },
 });

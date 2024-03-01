@@ -24,5 +24,10 @@ module.exports = new EntitySchema({
       target: 'UserAdmin',
       inverseSide: 'users',
     },
+    userProfile: {
+      type: 'many-to-one',
+      target: 'UserProfile',
+      inverseSide: 'users',
+    },
   },
 });
