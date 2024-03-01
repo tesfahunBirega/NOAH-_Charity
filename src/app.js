@@ -33,7 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 // sanitize request data
 app.use(xss());
 
-
 // gzip compression
 app.use(compression());
 
@@ -55,7 +54,7 @@ app.use((req, res, next) => {
 });
 
 // convert error to ApiError, if needed
-app.use(errorConverter); 
+app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
