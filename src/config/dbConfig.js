@@ -1,7 +1,7 @@
 const configs = require('./config');
-const user = require('../models/user.model.js');
-const userProfile = require('../models/userProfile.model.js');
-const userAdmin = require('../models/userAdmin.model.js');
+const { User, UserProfile, userAdmin } = require('../models/index');
+// const userProfile = require('../models/userProfile.model.js');
+// const userAdmin = require('../models/userAdmin.model.js');
 
 // configuration file for TypeORM db connection
 
@@ -10,17 +10,17 @@ module.exports = {
   host: configs.mysql.host, // Use MySQL host configuration
   port: configs.mysql.port, // Use MySQL port configuration
   username: configs.mysql.userName, // Use MySQL username configuration
-  password: configs.mysql.pswd, // Use MySQL password configuration
+  password: configs.mysql.password, // Use MySQL password configuration
   database: configs.mysql.database, // Use MySQL database configuration
   // entities: [__dirname + "/../models/*.js"],
-  entities: [user, userProfile, userAdmin],
+  entities: [User, UserProfile, userAdmin],
 
-  synchronize: configs.env === 'development' ? true : true,
-  migrations: [__dirname + '/migrations/*.js'], // Path to migration files
-  cli: {
-    entitiesDir: __dirname + '/models/*.js',
-    migrationsDir: __dirname + '/migrations',
-  },
+  synchronize: false,
+  // migrations: [__dirname + '/migrations/*.js'], // Path to migration files
+  // cli: {
+  //   entitiesDir: __dirname + '/models/*.js',
+  //   migrationsDir: __dirname + '/migrations',
+  // },
   extra: {
     connectionLimit: configs.mysql.maxConn, // Set the pool size to MySQL configuration
     idleTimeoutMillis: configs.mysql.idleTimeOut,
