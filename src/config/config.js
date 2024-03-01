@@ -15,7 +15,7 @@ const envVarsSchema = Joi.object()
     MYSQL_MAX_CONN_POOL: Joi.number().required().description('MySQL Maximum connection pool number is required!'),
     MYSQL_IDLE_TIMEOUT: Joi.number().required().description('MySQL Idle timeout is required!'),
     MYSQL_CONN_TIMEOUT: Joi.number().required().description('MySQL Connection timeout is required!'),
-    JWT_SECRET: Joi.string().required().description('JWT secret is required')
+    JWT_SECRET: Joi.string().required().description('JWT secret is required'),
     // Add more MySQL specific configuration if needed
   })
   .unknown();
