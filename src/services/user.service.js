@@ -1,10 +1,12 @@
 const httpStatus = require('http-status');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
-const dataSource = require('../utils/createDatabaseConnection');
 const ApiError = require('../utils/ApiError');
 const sortBy = require('../utils/sorter');
 const findAll = require('./Plugins/findAll');
+const configs = require('../config/config');
+const dataSource = require('../utils/createDatabaseConnection');
+const { User } = require('../models');
 
 const userRepository = dataSource.getRepository(User).extend({
   findAll,
@@ -27,11 +29,11 @@ const createUser = async (ReqBody) => {
   const doc = userRepository.create(ReqBody);
   return userRepository.save(doc);
 };
-const login = async (credentials) => {
+const login = async (credentials, expiresIn = '1h') => {
   const { email, password } = credentials;
 
   // Retrieve the user from the database based on the email
-  const user = await userRepository.findOne({ email });
+  const user = await userRepository.findOne({ where: { email } });
 
   if (!user) {
     throw new Error('User not found');
@@ -43,7 +45,7 @@ const login = async (credentials) => {
     throw new Error('Invalid password');
   }
   // Generate JWT token
-  const token = generateToken(user);
+  const token = jwt.sign(user, configs.secret, { expiresIn });
 
   // Return the user and token
   return { user, token };
