@@ -1,1 +1,1 @@
-module.exports.postValidation = require('./user.validation');
+module.exports.Validation = require('./user.validation');
