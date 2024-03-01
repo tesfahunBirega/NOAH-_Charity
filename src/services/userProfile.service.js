@@ -18,10 +18,7 @@ const userProfileRepository = dataSource.getRepository(UserProfile).extend({
  * @returns {Promise<Post>}
  */
 const createUserProfile = async (postBody) => {
-  console.log('11111111111firstkjasfkjqckj');
-
   const doc = userProfileRepository.create(postBody);
-  console.log('2222222222firstkjasfkjqckj');
   return await userProfileRepository.save(doc);
 };
 

@@ -17,4 +17,12 @@ module.exports = new EntitySchema({
   name: 'User',
   tableName: 'users',
   columns: new User(),
+
+  relations: {
+    userAdmin: {
+      type: 'many-to-one',
+      target: 'UserAdmin',
+      inverseSide: 'users',
+    },
+  },
 });

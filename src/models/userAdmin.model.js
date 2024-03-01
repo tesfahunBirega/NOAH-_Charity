@@ -15,4 +15,11 @@ module.exports = new EntitySchema({
   name: 'UserAdmin',
   tableName: 'userAdmins',
   columns: new UserAdmin(),
+  relations: {
+    user: {
+      type: 'one-to-many',
+      target: 'User',
+      inverseSide: 'userAdmins',
+    },
+  },
 });
