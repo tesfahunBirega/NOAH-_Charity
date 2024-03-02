@@ -30,6 +30,9 @@ module.exports = {
   secret: envVars.JWT_SECRET,
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  email: {
+    smtp: true,
+  },
   mysql: {
     userName: process.env.MYSQL_USER_NAME,
     password: process.env.MYSQL_PASSWORD,
