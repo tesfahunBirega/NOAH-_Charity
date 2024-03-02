@@ -58,26 +58,30 @@ If you did not create an account, then ignore this email.`;
 };
 
 mailchimp.setConfig({
-  apiKey: MAILCHIMP_API_KEY,
-  server: MAILCHIMP_SERVER_PREFIX,
+  apiKey: '70a230e765f219d94fe6224399dbafcb-us22',
+  server: 'us22',
 });
 
 async function sendMailChimp(to, subject, message) {
   // Implement your logic to send emails using Mailchimp API
-  const listId = 'your_mailchimp_list_id_here'; // Replace with your Mailchimp list ID
-  const response = await mailchimp.lists.addListMember(listId, {
-    email_address: to,
-    status: 'subscribed',
-    merge_fields: {
-      FNAME: 'Subscriber', // You can customize merge fields as per your requirement
-      LNAME: '',
-    },
-  });
-  const mailSent = await mailchimp.messages.send({
-    to: [{ email: to }],
-    subject: subject,
-    html: message,
-  });
+  try {
+    const listId = 'your_mailchimp_list_id_here'; // Replace with your Mailchimp list ID
+    const response = await mailchimp.lists.addListMember(listId, {
+      email_address: to,
+      status: 'subscribed',
+      merge_fields: {
+        FNAME: 'Subscriber', // You can customize merge fields as per your requirement
+        LNAME: '',
+      },
+    });
+    const mailSent = await mailchimp.messages.send({
+      to: [{ email: to }],
+      subject: subject,
+      html: message,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
