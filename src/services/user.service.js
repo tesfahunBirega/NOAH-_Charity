@@ -38,14 +38,16 @@ const login = async (credentials, expiresIn = '1h') => {
   if (!user) {
     throw new Error('User not found');
   }
+
   // Verify if the provided password matches the stored hashed password
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
     throw new Error('Invalid password');
   }
+
   // Generate JWT token
-  const token = jwt.sign(user, configs.secret, { expiresIn });
+  const token = jwt.sign({ id: user.id, email: user.email }, configs.secret, { expiresIn });
 
   // Return the user and token
   return { user, token };

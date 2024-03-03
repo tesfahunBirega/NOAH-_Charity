@@ -2,15 +2,16 @@ const express = require('express');
 const validate = require('../../middlewares/validate');
 const { Validation } = require('../../validations');
 const { userController } = require('../../controllers');
-
+const authMiddleware = require('../../middlewares/authMiddleware');
 const router = express.Router();
 
 router
   .route('/')
   .post(validate(Validation.createUser), userController.createUser)
-  .get(validate(Validation.getUsers), userController.getUsers);
+  .get(validate(Validation.getUsers), authMiddleware, userController.getUsers);
 
 router.route('/login').post(userController.login);
+// router.route('/login').post(authMiddleware, userController.login);
 
 router
   .route('/:postId')

@@ -19,16 +19,16 @@ const createUser = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   try {
-    // Extract username and password from the request body
+    // Extract email and password from the request body
     const { email, password } = req.body;
 
-    // Call the userService method to authenticate the user
+    // Call the login service function to authenticate the user
     const { user, token } = await userService.login({ email, password });
 
     // If authentication is successful, send the user and token in the response
     res.status(httpStatus.OK).send({ user, token });
   } catch (error) {
-    // Handle any errors that occur during authentication
+    // Handle authentication errors
     res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
   }
 });
