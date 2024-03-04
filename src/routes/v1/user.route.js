@@ -3,6 +3,8 @@ const validate = require('../../middlewares/validate');
 const { Validation } = require('../../validations');
 const { userController } = require('../../controllers');
 const authMiddleware = require('../../middlewares/authMiddleware');
+const { uploadOptions } = require('../../middlewares/multerUpload');
+
 const router = express.Router();
 
 router
