@@ -95,7 +95,7 @@ async function sendMailChimp(to, subject, message) {
       },
     });
     console.log(mailSent, "Yooo");
-  } catch (error) {console.log(error,"EPha");}
+  } catch (error) {console.log(error,"Epha");}
 }
 const send = async (email) => {
   try {
