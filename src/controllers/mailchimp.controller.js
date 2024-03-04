@@ -6,7 +6,7 @@ const sendNewsletter = async (req, res) => {
 
   try {
     const mail = await emailService.sendMailChimp(to, subject, message);
-    res.status(httpStatus.OK).json({ success: true, message: 'Email sent successfully', data: mail });
+    res.status(httpStatus.OK).json({ success: true, message: `'Email sent successfully'${mail}` });
   } catch (error) {
     res
       .status(httpStatus.INTERNAL_SERVER_ERROR)

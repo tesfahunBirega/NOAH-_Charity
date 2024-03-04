@@ -1,8 +1,14 @@
-const { MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX } = process.env;
+/* eslint-disable no-empty */
+const { MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX, API_KEY } = process.env;
+const mailchimpTransactional = require('@mailchimp/mailchimp_transactional');
 const mailchimp = require('@mailchimp/mailchimp_marketing');
+
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
+
+// const client = mailchimpTransactional.createTransactionalClient(API_KEY);
+
 
 // const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -56,30 +62,79 @@ To verify your email, click on this link: ${verificationEmailUrl}
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
-
 mailchimp.setConfig({
   apiKey: MAILCHIMP_API_KEY,
   server: MAILCHIMP_SERVER_PREFIX,
 });
-
+const event = {
+  name: ' JS Developers Meetup ',
+};
+const footerContactInfo = {
+  company: ' Mailchimp ',
+  address1: ' 405 N Angier Ave NE ',
+  city: ' Atlanta ',
+  state: ' GA ',
+  zip: ' 30308 ',
+  country: ' US ',
+};
+const campaignDefaults = {
+  from_name: ' Getting Together ',
+  from_email: ' efisolm22@gmail.com',
+  subject: ' JS Developers Meetup ',
+  language: ' EN_US ',
+};
 async function sendMailChimp(to, subject, message) {
   // Implement your logic to send emails using Mailchimp API
-  const listId = 'your_mailchimp_list_id_here'; // Replace with your Mailchimp list ID
-  const response = await mailchimp.lists.addListMember(listId, {
-    email_address: to,
-    status: 'subscribed',
-    merge_fields: {
-      FNAME: 'Subscriber', // You can customize merge fields as per your requirement
-      LNAME: '',
-    },
-  });
-  const mailSent = await mailchimp.messages.send({
-    to: [{ email: to }],
-    subject: subject,
-    html: message,
-  });
-}
+  try {
+    const responseID = await mailchimp.lists.createList({
+      name: event.name,
+      contact: footerContactInfo,
+      permission_reminder: 'permission_reminder',
+      email_type_option: true,
+      campaign_defaults: campaignDefaults,
+    });
+    console.log(`Successfully created an audience. The audience id is ${responseID.id}.`);
+    const listId = responseID.id; // Replace with your Mailchimp list ID
+    const responseI = await mailchimp.ping.get();
 
+    const response = await mailchimp.lists.addListMember(listId, {
+      email_address: to,
+      status: 'subscribed',
+      merge_fields: {
+        FNAME: subject, // You can customize merge fields as per your requirement
+        LNAME: subject,
+      },
+    });
+    const mailSent = await mailchimp.messages.send({
+      to: [{ email: to }],
+      subject,
+      html: message,
+    });
+  } catch (error) {console.log(error);}
+}
+const send = async (email) => {
+  try {
+    const templateName = 'your-template-name'; // Replace with the name of your Mandrill template
+    const templateContent = []; // If your template has dynamic content, provide it here
+    const message = {
+      subject: 'Welcome to Our Service!',
+      from_email: 'your@email.com', // Replace with your email address
+      to: [{ email }],
+      merge: true, // Enable merge tags if you have dynamic content in your template
+      merge_language: 'handlebars', // Use handlebars for merge tags
+    };
+    const result = await mailchimpTransactional.messages.sendTemplate({
+      template_name: templateName,
+      template_content: templateContent,
+      message,
+    });
+    console.log('Welcome email sent successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending welcome email:', error);
+    throw error;
+  }
+}
 module.exports = {
   // transport,
   sendEmail,
