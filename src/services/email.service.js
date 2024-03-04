@@ -2,13 +2,12 @@
 const { MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX, API_KEY } = process.env;
 const mailchimpTransactional = require('@mailchimp/mailchimp_transactional');
 const mailchimp = require('@mailchimp/mailchimp_marketing');
-
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
-
+const axios = require('axios');
+const configs = require('../config/config');
 // const client = mailchimpTransactional.createTransactionalClient(API_KEY);
-
 
 // const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -62,10 +61,6 @@ To verify your email, click on this link: ${verificationEmailUrl}
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
-mailchimp.setConfig({
-  apiKey: MAILCHIMP_API_KEY,
-  server: MAILCHIMP_SERVER_PREFIX,
-});
 const event = {
   name: ' JS Developers Meetup ',
 };
@@ -86,31 +81,21 @@ const campaignDefaults = {
 async function sendMailChimp(to, subject, message) {
   // Implement your logic to send emails using Mailchimp API
   try {
-    const responseID = await mailchimp.lists.createList({
-      name: event.name,
-      contact: footerContactInfo,
-      permission_reminder: 'permission_reminder',
-      email_type_option: true,
-      campaign_defaults: campaignDefaults,
+    mailchimp.setConfig({
+      apiKey: configs.MAILCHIMP_API_KEY,
+      server: configs.MAILCHIMP_SERVER_PREFIX,
     });
-    console.log(`Successfully created an audience. The audience id is ${responseID.id}.`);
-    const listId = responseID.id; // Replace with your Mailchimp list ID
-    const responseI = await mailchimp.ping.get();
-
-    const response = await mailchimp.lists.addListMember(listId, {
-      email_address: to,
-      status: 'subscribed',
-      merge_fields: {
-        FNAME: subject, // You can customize merge fields as per your requirement
-        LNAME: subject,
+    const mailSent = await mailchimp.messages.sendTemplate({
+      template_name: 'Your_Template_Name',
+      template_content: [],
+      message: {
+        to: [{ email: to }],
+        subject,
+        html: message,
       },
     });
-    const mailSent = await mailchimp.messages.send({
-      to: [{ email: to }],
-      subject,
-      html: message,
-    });
-  } catch (error) {console.log(error);}
+    console.log(mailSent, "Yooo");
+  } catch (error) {console.log(error,"EPha");}
 }
 const send = async (email) => {
   try {
