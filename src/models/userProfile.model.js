@@ -21,6 +21,8 @@ module.exports = new EntitySchema({
       type: 'one-to-many',
       target: 'User',
       inverseSide: 'userProfiles',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   },
 });

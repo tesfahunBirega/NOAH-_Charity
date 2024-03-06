@@ -10,6 +10,7 @@ class User extends Base {
     this.email = { type: 'varchar' };
     this.password = { type: 'varchar' };
     this.role = { type: 'varchar' };
+    this.dummy = { type: 'boolean' };
   }
 }
 
@@ -23,11 +24,15 @@ module.exports = new EntitySchema({
       type: 'many-to-one',
       target: 'UserAdmin',
       inverseSide: 'users',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     userProfile: {
       type: 'many-to-one',
       target: 'UserProfile',
       inverseSide: 'users',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   },
 });
