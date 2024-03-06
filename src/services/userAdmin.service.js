@@ -19,9 +19,10 @@ const userRepository = dataSource.getRepository(userAdmin).extend({
  */
 const createUser = async (userData) => {
   try {
-    const user = await userRepository.create(userData); // Create a new user document
-    return user; // Return the created user
+    const user = userRepository.create(userData); // Create a new user document
+    return userRepository.save(user); // Return the created user
   } catch (error) {
+    console.error('Error creating user:', error);
     throw new Error('Error creating user');
   }
 };

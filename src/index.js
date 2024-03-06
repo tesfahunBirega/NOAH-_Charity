@@ -7,7 +7,7 @@ let server;
 
 AppDataSource.initialize()
   .then(() => {
-    logger.info('Connected to mysql through Typeorm');
+    logger.info('Connected to Postgres through Typeorm');
     server = app.listen(config.port, () => {
       logger.info(`Listening to port ${config.port}`);
     });

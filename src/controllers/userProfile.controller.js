@@ -5,8 +5,6 @@ const catchAsync = require('../utils/catchAsync');
 const { userProfileService } = require('../services');
 
 const createUserProfile = catchAsync(async (req, res) => {
-  console.log('2222222222firstkjasfkjqckj');
-
   const user = await userProfileService.createUserProfile(req.body);
   // console.log('firstttttt', req.body);
 
