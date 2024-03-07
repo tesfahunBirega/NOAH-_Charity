@@ -16,6 +16,8 @@ const envVarsSchema = Joi.object()
     MYSQL_IDLE_TIMEOUT: Joi.number().required().description('MySQL Idle timeout is required!'),
     MYSQL_CONN_TIMEOUT: Joi.number().required().description('MySQL Connection timeout is required!'),
     JWT_SECRET: Joi.string().required().description('JWT secret is required'),
+    MAILCHIMP_API_KEY: Joi.required().description('MAILCHIMP_API_KEY required'),
+    MAILCHIMP_SERVER_PREFIX: Joi.required().description('MAILCHIMP_SERVER_PREFIX required'),
     // Add more MySQL specific configuration if needed
   })
   .unknown();
@@ -28,6 +30,8 @@ if (error) {
 
 module.exports = {
   secret: envVars.JWT_SECRET,
+  MAILCHIMP_SERVER_PREFIX: envVars.MAILCHIMP_SERVER_PREFIX,
+  MAILCHIMP_API_KEY: envVars.MAILCHIMP_API_KEY,
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   email: {

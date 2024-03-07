@@ -6,9 +6,9 @@ const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { fullName, phone, email, password, role } = req.body;
 
-    const user = await userService.createUser({ firstName, lastName, email, password });
+    const user = await userService.createUser({ fullName, phone, email, password, role });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {
@@ -34,7 +34,10 @@ const login = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
+  console.log(req.body, 'bodyyyyy');
+
   const filter = pick(req.query, ['title']);
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
@@ -46,6 +49,10 @@ const getUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
   res.send(post);
+});
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userService.getAllUsers();
+  res.send(users);
 });
 
 const updateUser = catchAsync(async (req, res) => {
@@ -65,4 +72,5 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+  getAllUsers,
 };

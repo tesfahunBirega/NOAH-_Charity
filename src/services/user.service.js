@@ -21,11 +21,24 @@ const userRepository = dataSource.getRepository(User).extend({
  * @returns {Promise<Post>}
  */
 const createUser = async (ReqBody) => {
-  // Generate a salt
-  const salt = await bcrypt.genSalt(10);
-  // Hash the password using the generated salt
-  const hashedPassword = await bcrypt.hash(ReqBody.password, salt);
-  ReqBody.password = hashedPassword;
+  const { email } = ReqBody;
+
+  // Check if the email already exists in the database
+  const existingUser = await userRepository.findOne({ where: { email } });
+  if (existingUser) {
+    throw new Error('Email is already in use.');
+  }
+  const { password } = ReqBody;
+
+  if (password) {
+    // Generate a salt
+    const salt = await bcrypt.genSalt(10);
+    // Hash the password using the generated salt
+    const hashedPassword = await bcrypt.hash(password, salt);
+    // Update the password in the request body
+    ReqBody.password = hashedPassword;
+  }
+
   const doc = userRepository.create(ReqBody);
   return userRepository.save(doc);
 };
@@ -65,12 +78,9 @@ const login = async (credentials, expiresIn = '1h') => {
 
 const queryUsers = async (filter, options) => {
   const { limit, page, sortByOp } = options;
-
-  return userRepository.findAll({
-    tableName: 'user',
-    sortOptions: sortByOp && { option: sortBy },
-    paginationOptions: { limit, page },
-  });
+  // Fetch users with role 'user'
+  const users = await userRepository.findAll({ where: { role: 'user' } });
+  return users;
 };
 
 /**
@@ -78,6 +88,10 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Post>}
  */
+const getAllUsers = async () => {
+  return userRepository.find({ where: { role: 'user' } });
+};
+
 const getUserById = async (id) => {
   return userRepository.findOneBy({ id });
 };
@@ -117,4 +131,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   login,
+  getAllUsers,
 };
