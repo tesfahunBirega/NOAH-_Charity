@@ -36,17 +36,14 @@ const sendEmail = async (to, subject, text) => {
  * @param {string} token
  * @returns {Promise}
  */
-const sendResetPasswordEmail = async (to, subjectParam, token) => {
+const sendResetPasswordEmail = async (to, token) => {
   const subject = 'Reset password';
+  // replace this url with the link to the reset password page of your front-end app
   const resetPasswordUrl = `http://link-to-app/reset-password?token=${token}`;
   const text = `Dear user,
 To reset your password, click on this link: ${resetPasswordUrl}
 If you did not request any password resets, then ignore this email.`;
-  try {
-    await sendEmail(to, subject, text);
-  } catch (error) {
-    throw new Error(`Failed to send reset password email: ${error.message}`);
-  }
+  await sendEmail(to, subject, text);
 };
 
 /**
@@ -97,10 +94,6 @@ async function sendMailChimp(to, subject, message) {
         html: message,
       },
     });
-    //   console.log(mailSent, 'Yooo');
-    // } catch (error) {
-    //   console.log(error, 'Epha');
-    // }
     console.log(mailSent, 'Yooo');
   } catch (error) {
     console.log(error, 'Epha');
@@ -128,11 +121,12 @@ const send = async (email) => {
     console.error('Error sending welcome email:', error);
     throw error;
   }
-  mailchimp.setConfig({
-    apiKey: '70a230e765f219d94fe6224399dbafcb-us22',
-    server: 'us22',
-  });
 };
+mailchimp.setConfig({
+  apiKey: '70a230e765f219d94fe6224399dbafcb-us22',
+  server: 'us22',
+});
+
 async function sendMailChimp(to, subject, message) {
   // Implement your logic to send emails using Mailchimp API
   try {
@@ -155,6 +149,7 @@ async function sendMailChimp(to, subject, message) {
   }
 }
 module.exports = {
+  // transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
