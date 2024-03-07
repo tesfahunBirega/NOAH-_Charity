@@ -97,6 +97,10 @@ async function sendMailChimp(to, subject, message) {
         html: message,
       },
     });
+    //   console.log(mailSent, 'Yooo');
+    // } catch (error) {
+    //   console.log(error, 'Epha');
+    // }
     console.log(mailSent, 'Yooo');
   } catch (error) {
     console.log(error, 'Epha');
