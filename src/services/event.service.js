@@ -9,7 +9,6 @@ const eventRepository = dataSource.getRepository(Event).extend({
   findAll,
   sortBy,
 });
-
 const createEvent = async (eventBody) => {
   const doc = eventRepository.create(eventBody);
   const result = await eventRepository.save(doc);
