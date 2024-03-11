@@ -1,5 +1,7 @@
+const path = require('path');
 const configs = require('./config');
 const { User, UserProfile, userAdmin } = require('../models/index');
+
 // const userProfile = require('../models/userProfile.model.js');
 // const userAdmin = require('../models/userAdmin.model.js');
 
@@ -16,11 +18,12 @@ module.exports = {
   entities: [User, UserProfile, userAdmin],
 
   synchronize: false,
-  // migrations: [__dirname + '/migrations/*.js'], // Path to migration files
-  // cli: {
-  //   entitiesDir: __dirname + '/models/*.js',
-  //   migrationsDir: __dirname + '/migrations',
-  // },
+  // migrationsRun: true,
+  migrations: [path.join(__dirname, '../migrations/*.js')], // Path to migration files
+  cli: {
+    entitiesDir: path.join(__dirname, '../models'),
+    migrationsDir: path.join(__dirname, '../migrations*.js'),
+  },
   extra: {
     connectionLimit: configs.mysql.maxConn, // Set the pool size to MySQL configuration
     idleTimeoutMillis: configs.mysql.idleTimeOut,
