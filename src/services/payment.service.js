@@ -10,7 +10,7 @@ const processStripePayment = async (paymentData) => {
             product_data: {
               name: 'Donate',
               description: 'sample',
-              images: ['https://ngh1.org/assets/ElderlyEt-aoA5sfie.jpg'],
+              images: ['https://ngh1.org/assets/IMG-20240223-WA0001(1).jpg'],
             },
             unit_amount: paymentData.donation_ammount,
           },
