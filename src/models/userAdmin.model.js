@@ -13,7 +13,7 @@ class UserAdmin extends Base {
 
 module.exports = new EntitySchema({
   name: 'UserAdmin',
-  tableName: 'userAdmins',
+  tableName: 'useradmins',
   columns: new UserAdmin(),
   relations: {
     user: {

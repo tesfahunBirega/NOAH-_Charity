@@ -14,7 +14,7 @@ class UserProfile extends Base {
 
 module.exports = new EntitySchema({
   name: 'UserProfile',
-  tableName: 'userProfiles',
+  tableName: 'userprofiles',
   columns: new UserProfile(),
   relations: {
     user: {

@@ -10,7 +10,6 @@ class User extends Base {
     this.email = { type: 'varchar' };
     this.password = { type: 'varchar' };
     this.role = { type: 'varchar' };
-    this.dummy = { type: 'boolean' };
   }
 }
 
