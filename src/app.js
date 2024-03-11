@@ -1,20 +1,47 @@
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
-
 const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
+const passportJWT = require('passport-jwt');
 const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
 const app = express();
+
+// Initialize Passport
+app.use(passport.initialize());
+
+// JWT Strategy configuration
+const JwtStrategy = passportJWT.Strategy;
+const ExtractJwt = passportJWT.ExtractJwt;
+const User = require('./models/user.model'); // Assuming you have a user model
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: 'thisisasamplesecret', // Replace with your actual secret key
+};
+
+passport.use(
+  new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
+    try {
+      const user = await User.findById(jwtPayload.sub);
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    } catch (error) {
+      return done(error, false);
+    }
+  })
+);
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);

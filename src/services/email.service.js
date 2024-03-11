@@ -94,8 +94,10 @@ async function sendMailChimp(to, subject, message) {
         html: message,
       },
     });
-    console.log(mailSent, "Yooo");
-  } catch (error) {console.log(error,"Epha");}
+    console.log(mailSent, 'Yooo');
+  } catch (error) {
+    console.log(error, 'Epha');
+  }
 }
 const send = async (email) => {
   try {
@@ -118,8 +120,8 @@ const send = async (email) => {
   } catch (error) {
     console.error('Error sending welcome email:', error);
     throw error;
-=======
-
+  }
+};
 mailchimp.setConfig({
   apiKey: '70a230e765f219d94fe6224399dbafcb-us22',
   server: 'us22',
