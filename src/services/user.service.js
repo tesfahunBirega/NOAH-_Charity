@@ -38,7 +38,12 @@ const createUser = async (ReqBody) => {
     // Update the password in the request body
     ReqBody.password = hashedPassword;
   }
-
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+  // Hash the password using the generated salt
+  const hashedPassword = await bcrypt.hash(ReqBody.password, salt);
+  // eslint-disable-next-line no-param-reassign
+  ReqBody.password = hashedPassword;
   const doc = userRepository.create(ReqBody);
   return userRepository.save(doc);
 };
