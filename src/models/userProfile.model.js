@@ -14,13 +14,15 @@ class UserProfile extends Base {
 
 module.exports = new EntitySchema({
   name: 'UserProfile',
-  tableName: 'userProfiles',
+  tableName: 'userprofiles',
   columns: new UserProfile(),
   relations: {
     user: {
       type: 'one-to-many',
       target: 'User',
       inverseSide: 'userProfiles',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   },
 });

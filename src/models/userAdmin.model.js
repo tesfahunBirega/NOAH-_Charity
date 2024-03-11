@@ -14,13 +14,15 @@ class UserAdmin extends Base {
 
 module.exports = new EntitySchema({
   name: 'UserAdmin',
-  tableName: 'userAdmins',
+  tableName: 'useradmins',
   columns: new UserAdmin(),
   relations: {
     user: {
       type: 'one-to-many',
       target: 'User',
       inverseSide: 'userAdmins',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   },
 });

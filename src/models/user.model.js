@@ -23,11 +23,15 @@ module.exports = new EntitySchema({
       type: 'many-to-one',
       target: 'UserAdmin',
       inverseSide: 'users',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     userProfile: {
       type: 'many-to-one',
       target: 'UserProfile',
       inverseSide: 'users',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   },
 });

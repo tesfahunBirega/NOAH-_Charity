@@ -127,7 +127,7 @@ mailchimp.setConfig({
   server: 'us22',
 });
 
-async function sendMailChimp(to, subject, message) {
+async function sendMailChimp (to, subject, message) {
   // Implement your logic to send emails using Mailchimp API
   try {
     const listId = 'your_mailchimp_list_id_here'; // Replace with your Mailchimp list ID

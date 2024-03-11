@@ -18,8 +18,8 @@ const processStripePayment = async (paymentData) => {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:4242/success',
-      cancel_url: 'http://localhost:4242/cancel',
+      success_url: 'http://localhost:3000/success',
+      cancel_url: 'http://localhost:3000/cancel',
     });
     return session;
   } catch (error) {
