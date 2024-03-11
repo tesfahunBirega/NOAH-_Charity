@@ -2,10 +2,24 @@ const express = require('express');
 // const validate = require('../../middlewares/validate');
 // const { postValidation } = require('../../validations');
 const { userAdminController } = require('../../controllers');
+const app = express();
 
 const router = express.Router();
 
-router.route('/').post(userAdminController.createUserAdmin).get(userAdminController.getUsersAdmin);
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: 'public',
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const uploade = multer({ storage });
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+router.route('/').post(uploade.single('path'), userAdminController.createUserAdmin).get(userAdminController.getUsersAdmin);
 
 router
   .route('/:postId')

@@ -6,9 +6,9 @@ const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { fullName, phone, email, password, role } = req.body;
 
-    const user = await userService.createUser({ firstName, lastName, email, password });
+    const user = await userService.createUser({ fullName, phone, email, password, role });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {
@@ -19,22 +19,25 @@ const createUser = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   try {
-    // Extract username and password from the request body
+    // Extract email and password from the request body
     const { email, password } = req.body;
 
-    // Call the userService method to authenticate the user
+    // Call the login service function to authenticate the user
     const { user, token } = await userService.login({ email, password });
 
     // If authentication is successful, send the user and token in the response
     res.status(httpStatus.OK).send({ user, token });
   } catch (error) {
-    // Handle any errors that occur during authentication
+    // Handle authentication errors
     res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
   }
 });
 
 const getUsers = catchAsync(async (req, res) => {
+  console.log(req.body, 'bodyyyyy');
+
   const filter = pick(req.query, ['title']);
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
@@ -46,6 +49,10 @@ const getUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
   res.send(post);
+});
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userService.getAllUsers();
+  res.send(users);
 });
 
 const updateUser = catchAsync(async (req, res) => {
@@ -65,4 +72,5 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+  getAllUsers,
 };

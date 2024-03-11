@@ -8,6 +8,7 @@ class UserAdmin extends Base {
     this.user_id = { type: 'varchar' };
     this.role = { type: 'varchar' };
     this.is_actived = { type: 'varchar' };
+    this.path = { type: 'varchar' };
   }
 }
 

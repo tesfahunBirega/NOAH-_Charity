@@ -4,11 +4,19 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userAdminService } = require('../services');
 
-const createUserAdmin = catchAsync(async (req, res) => {
-  const user = await userAdminService.createUser(req.body);
+const createUserAdmin = async (req, res) => {
+  try {
+    console.log(req.body, 'userdataaaaaaaaaaaaaaaaaaaa');
 
-  res.status(httpStatus.CREATED).send(user);
-});
+    const path = req.file ? req.file.path : null;
+    req.body.path = path;
+    console.log(' for path', path);
+    const user = await userAdminService.createUser(req.body); // Create a new user
+    res.status(httpStatus.CREATED).send(user); // Send the user details in the response
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error: error.message });
+  }
+};
 
 const getUsersAdmin = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['title']);

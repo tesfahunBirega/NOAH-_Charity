@@ -21,6 +21,23 @@ const userRepository = dataSource.getRepository(User).extend({
  * @returns {Promise<Post>}
  */
 const createUser = async (ReqBody) => {
+  const { email } = ReqBody;
+
+  // Check if the email already exists in the database
+  const existingUser = await userRepository.findOne({ where: { email } });
+  if (existingUser) {
+    throw new Error('Email is already in use.');
+  }
+  const { password } = ReqBody;
+
+  if (password) {
+    // Generate a salt
+    const salt = await bcrypt.genSalt(10);
+    // Hash the password using the generated salt
+    const hashedPassword = await bcrypt.hash(password, salt);
+    // Update the password in the request body
+    ReqBody.password = hashedPassword;
+  }
   // Generate a salt
   const salt = await bcrypt.genSalt(10);
   // Hash the password using the generated salt
@@ -39,14 +56,16 @@ const login = async (credentials, expiresIn = '1h') => {
   if (!user) {
     throw new Error('User not found');
   }
+
   // Verify if the provided password matches the stored hashed password
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
     throw new Error('Invalid password');
   }
+
   // Generate JWT token
-  const token = jwt.sign(user, configs.secret, { expiresIn });
+  const token = jwt.sign({ id: user.id, email: user.email }, configs.secret, { expiresIn });
 
   // Return the user and token
   return { user, token };
@@ -64,12 +83,9 @@ const login = async (credentials, expiresIn = '1h') => {
 
 const queryUsers = async (filter, options) => {
   const { limit, page, sortByOp } = options;
-
-  return userRepository.findAll({
-    tableName: 'user',
-    sortOptions: sortByOp && { option: sortBy },
-    paginationOptions: { limit, page },
-  });
+  // Fetch users with role 'user'
+  const users = await userRepository.findAll({ where: { role: 'user' } });
+  return users;
 };
 
 /**
@@ -77,6 +93,10 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Post>}
  */
+const getAllUsers = async () => {
+  return userRepository.find({ where: { role: 'user' } });
+};
+
 const getUserById = async (id) => {
   return userRepository.findOneBy({ id });
 };
@@ -116,4 +136,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   login,
+  getAllUsers,
 };
