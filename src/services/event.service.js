@@ -17,6 +17,7 @@ const createEvent = async (eventBody) => {
 };
 
 const queryEvents = async (filter, options) => {
+  // eslint-disable-next-line no-shadow
   const { limit, page, sortBy } = options;
 
   const result = await eventRepository.findAll({
