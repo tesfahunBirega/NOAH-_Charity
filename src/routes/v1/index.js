@@ -4,6 +4,7 @@ const userProfileRoute = require('./userProfile.route');
 const userAdminRoute = require('./userAdmin.route');
 const paymentRoute = require('./payment.route');
 const emailRoute = require('./mailchimp.route');
+const eventRoute = require('./event.route');
 // const docsRoute = require('./docs.route');
 // const config = require('../../config/config');
 
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/emails',
     route: emailRoute,
+  },
+  {
+    path: '/event',
+    route: eventRoute,
   },
 ];
 

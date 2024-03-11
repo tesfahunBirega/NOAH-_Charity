@@ -1,3 +1,4 @@
 module.exports.User = require('./user.model');
 module.exports.UserProfile = require('./userProfile.model');
 module.exports.userAdmin = require('./userAdmin.model');
+module.exports.Event = require('./event.model');
