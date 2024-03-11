@@ -2,6 +2,7 @@ const stripe = require('stripe')(require('../config/paymentConfig').stripeApiKey
 
 const processStripePayment = async (paymentData) => {
   try {
+    const amount = paymentData.donation_ammount * 100;
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -9,10 +10,11 @@ const processStripePayment = async (paymentData) => {
             currency: 'usd',
             product_data: {
               name: 'Donate',
-              description: 'sample',
+              description:
+                'Your donation will help us continue improving the lives of internally displaced persons in Ethiopia.',
               images: ['https://ngh1.org/assets/IMG-20240223-WA0001(1).jpg'],
             },
-            unit_amount: paymentData.donation_ammount,
+            unit_amount: amount,
           },
           quantity: 1,
         },

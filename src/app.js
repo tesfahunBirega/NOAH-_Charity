@@ -20,7 +20,7 @@ app.use(passport.initialize());
 
 // JWT Strategy configuration
 const JwtStrategy = passportJWT.Strategy;
-const ExtractJwt = passportJWT.ExtractJwt;
+const { ExtractJwt } = passportJWT;
 const User = require('./models/user.model'); // Assuming you have a user model
 
 const jwtOptions = {
@@ -34,9 +34,8 @@ passport.use(
       const user = await User.findById(jwtPayload.sub);
       if (user) {
         return done(null, user);
-      } else {
-        return done(null, false);
       }
+      return done(null, false);
     } catch (error) {
       return done(error, false);
     }
