@@ -12,19 +12,14 @@ const eventRepository = dataSource.getRepository(Event).extend({
 const createEvent = async (eventBody) => {
   const doc = eventRepository.create(eventBody);
   const result = await eventRepository.save(doc);
-  console.log('event');
   return result;
 };
 
-const queryEvents = async (filter, options) => {
+const queryEvents = async () => {
   // eslint-disable-next-line no-shadow
-  const { limit, page, sortBy } = options;
+  // const { limit, page, sortBy } = options;
 
-  const result = await eventRepository.findAll({
-    tableName: 'event',
-    sortOptions: sortBy && { option: sortBy },
-    paginationOptions: { limit, page },
-  });
+  const result = await eventRepository.findAll({ tableName: 'events'});
   return result;
 };
 
