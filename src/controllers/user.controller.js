@@ -63,6 +63,10 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const findRole = catchAsync(async (req, res) => {
+  const result = await userService.findRole();
+  res.send(result);
+});
 module.exports = {
   createUser,
   getUsers,
@@ -71,4 +75,5 @@ module.exports = {
   deleteUser,
   login,
   getAllUsers,
+  findRole,
 };

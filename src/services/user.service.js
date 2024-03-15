@@ -92,6 +92,13 @@ const getAllUsers = async () => {
   return userRepository.find({ where: { role: 'user' } });
 };
 
+const findRole = async () => {
+  const resultAdmin = userRepository.find({ where: { role: 'admin' } });
+  const resultSuperAdmin = userRepository.find({ where: { role: 'superAdmin' } });
+  const result = [...resultAdmin, ...resultSuperAdmin];
+  return result;
+};
+
 const getUserById = async (id) => {
   return userRepository.findOneBy({ id });
 };
@@ -132,4 +139,5 @@ module.exports = {
   deleteUserById,
   login,
   getAllUsers,
+  findRole,
 };
