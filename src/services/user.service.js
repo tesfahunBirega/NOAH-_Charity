@@ -77,8 +77,7 @@ const login = async (credentials, expiresIn = '1h') => {
  * @returns {Promise<QueryResult>}
  */
 
-const queryUsers = async (filter, options) => {
-  const { limit, page, sortByOp } = options;
+const queryUsers = async () => {
   // Fetch users with role 'user'
   const users = await userRepository.findAll({ where: { role: 'user' } });
   return users;

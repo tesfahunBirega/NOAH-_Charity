@@ -34,8 +34,6 @@ const login = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  console.log(req.body, 'bodyyyyy');
-
   const filter = pick(req.query, ['title']);
 
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
