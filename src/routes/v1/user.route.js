@@ -21,6 +21,8 @@ router
   .patch(validate(Validation.updateUser), userController.updateUser)
   .delete(validate(Validation.deleteUser), userController.deleteUser);
 
+router.route('/role').get(userController.findRole);
+
 module.exports = router;
 
 /**
