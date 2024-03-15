@@ -2,13 +2,13 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { userService } = require('../services');
+const { feedBackService } = require('../services');
 
-const createUser = catchAsync(async (req, res) => {
+const createFeedback = catchAsync(async (req, res) => {
   try {
-    const { fullName, phone, email, password, role, country } = req.body;
+    const { name, email, message, is_seen } = req.body;
 
-    const user = await userService.createUser({ fullName, phone, email, password, role, country });
+    const user = await feedBackService.createfeedback({ name, email, message, is_seen });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {
@@ -16,24 +16,11 @@ const createUser = catchAsync(async (req, res) => {
     res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
   }
 });
-
-const login = catchAsync(async (req, res) => {
-  try {
-    // Extract email and password from the request body
-    const { email, password } = req.body;
-
-    // Call the login service function to authenticate the user
-    const { user, token } = await userService.login({ email, password });
-
-    // If authentication is successful, send the user and token in the response
-    res.status(httpStatus.OK).send({ user, token });
-  } catch (error) {
-    // Handle authentication errors
-    res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
-  }
+const getAllFeedback = catchAsync(async (req, res) => {
+  const Feedbacks = await feedBackService.getAllUsers();
+  res.send(users);
 });
-
-const getUsers = catchAsync(async (req, res) => {
+const getFeedback = catchAsync(async (req, res) => {
   console.log(req.body, 'bodyyyyy');
 
   const filter = pick(req.query, ['title']);
@@ -50,10 +37,7 @@ const getUser = catchAsync(async (req, res) => {
   }
   res.send(post);
 });
-const getAllUsers = catchAsync(async (req, res) => {
-  const users = await userService.getAllUsers();
-  res.send(users);
-});
+
 const resetPassword = async (req, res, next) => {
   try {
     // Get Req Body
@@ -79,8 +63,7 @@ const resetPassword = async (req, res, next) => {
   }
 };
 const updateUser = catchAsync(async (req, res) => {
-  const { fullName, phone, email, password, role } = req.body;
-  const post = await userService.updateUserById(req.params.userId, fullName, phone, email, password, role);
+  const post = await userService.updateUserById(req.params.postId, req.body);
   res.send(post);
 });
 
@@ -90,12 +73,11 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  createUser,
-  getUsers,
+  createFeedback,
+  getFeedback,
   getUser,
   updateUser,
   deleteUser,
-  login,
-  getAllUsers,
+  getAllFeedback,
   resetPassword,
 };

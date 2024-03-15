@@ -1,25 +1,20 @@
 const express = require('express');
 const validate = require('../../middlewares/validate');
 const { Validation } = require('../../validations');
-const { userController } = require('../../controllers');
+const { feedBackController } = require('../../controllers');
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(validate(Validation.createUser), userController.createUser)
-  .get(validate(Validation.getUsers), userController.getAllUsers);
-router.route('/resetPassword').post(userController.resetPassword);
+router.route('/').post(feedBackController.createFeedback).get(feedBackController.getAllFeedback);
 
-router.route('/login').post(userController.login);
 // router.route('/login').post(authMiddleware, userController.login);
 
 router
-  .route('/:userId')
-  .get(validate(Validation.getUser), userController.getUser)
-  .patch(validate(Validation.updateUser), userController.updateUser)
-  .delete(validate(Validation.deleteUser), userController.deleteUser);
+  .route('/:postId')
+  .get(validate(Validation.getUser), feedBackController.getFeedback)
+  .patch(validate(Validation.updateUser), feedBackController.updateUser)
+  .delete(validate(Validation.deleteUser), feedBackController.deleteUser);
 
 module.exports = router;
 

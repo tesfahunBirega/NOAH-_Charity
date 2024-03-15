@@ -12,6 +12,7 @@ const eventRepository = dataSource.getRepository(Event).extend({
 const createEvent = async (eventBody) => {
   const doc = eventRepository.create(eventBody);
   const result = await eventRepository.save(doc);
+  console.log('event');
   return result;
 };
 
