@@ -7,6 +7,7 @@ const findAll = require('./Plugins/findAll');
 const configs = require('../config/config');
 const dataSource = require('../utils/createDatabaseConnection');
 const { User } = require('../models');
+const { getConnection } = require('typeorm');
 
 const userRepository = dataSource.getRepository(User).extend({
   findAll,
@@ -20,6 +21,70 @@ const userRepository = dataSource.getRepository(User).extend({
  * @param {Object} userBody
  * @returns {Promise<Post>}
  */
+
+const hash = (pass) => {
+  return bcrypt.hashSync(pass, 10);
+};
+const editUser = async (id, data) => {
+  try {
+    const idUser = id;
+    const updatedFields = data;
+    const connection = getConnection();
+    const userRepository = connection.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: idUser } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    await userRepository.update(id, {
+      first_name: updatedFields?.first_name,
+      last_name: updatedFields?.last_name,
+      phone_number: updatedFields?.phone_number,
+      user_type: updatedFields?.user_type,
+      profile_pic: updatedFields?.profile_pic,
+    });
+
+    const userTeamRepository = connection.getRepository(TeamUser);
+    await userTeamRepository.delete({ user_id: id });
+
+    if (updatedFields.team_id) {
+      const teams = updatedFields.team_id;
+      const teamEntities = teams.map((teamId) => ({
+        user_id: id,
+        team_id: teamId,
+      }));
+      await userTeamRepository.save(teamEntities);
+    }
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+const getUserByEmail = async (credentials) => {
+  try {
+    const { email, password } = credentials;
+
+    // Form Connection
+    // const connection = getConnection();
+    // const userRepository = connection.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { email: email },
+    });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Check if the password matches
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      throw new Error('Incorrect password');
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createUser = async (ReqBody) => {
   const { email } = ReqBody;
 
@@ -43,6 +108,7 @@ const createUser = async (ReqBody) => {
   const doc = userRepository.create(ReqBody);
   return userRepository.save(doc);
 };
+
 const login = async (credentials, expiresIn = '1h') => {
   const { email, password } = credentials;
 
@@ -109,15 +175,14 @@ const getUserById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Post>}
  */
-const updateUserById = async (postId, updateBody) => {
-  const UserByID = await getUserById(postId);
-  if (!UserByID) {
+const updateUserById = async (userId, updateBody) => {
+  const userById = await getUserById(userId);
+  if (!userById) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const update = await userRepository.update({ id: postId }, updateBody);
-  return update;
+  const updateResult = await userRepository.update({ id: userId }, updateBody); // Use updateBody to specify updated values
+  return updateResult;
 };
-
 /**
  * Delete user by id
  * @param {ObjectId} postId
@@ -140,4 +205,7 @@ module.exports = {
   login,
   getAllUsers,
   findRole,
+  getUserByEmail,
+  editUser,
+  hash,
 };

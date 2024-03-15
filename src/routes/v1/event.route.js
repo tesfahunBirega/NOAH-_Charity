@@ -5,10 +5,7 @@ const { eventController } = require('../../controllers');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(validate(eventValidation.createEvent), eventController.createEvent)
-  .get(validate(eventValidation.getEvents), eventController.getEvents);
+router.route('/').post(eventController.createEvent).get(validate(eventValidation.getEvents), eventController.getEvents);
 
 router
   .route('/:eventId')

@@ -6,9 +6,9 @@ const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
-    const { fullName, phone, email, password, role } = req.body;
+    const { fullName, phone, email, password, role, country } = req.body;
 
-    const user = await userService.createUser({ fullName, phone, email, password, role });
+    const user = await userService.createUser({ fullName, phone, email, password, role, country });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {
@@ -52,13 +52,39 @@ const getAllUsers = catchAsync(async (req, res) => {
   const users = await userService.getAllUsers();
   res.send(users);
 });
+const resetPassword = async (req, res, next) => {
+  try {
+    // Get Req Body
+    let email = req.body.email;
+    // Generate Password
+    let password = userService.hash('%TGBnhy6');
+    return password;
+    // Check User Existence
+    let user = await userService.getUserByEmail(email);
+    if (!user) return next(new ApiError('User Not Found!', 404));
 
+    // Reset Password
+    user.password = password;
+    let passwordResetUser = await userService.editUser(user.id, user);
+
+    // Respond
+    res.status(200).json({
+      status: 'Success',
+      data: passwordResetUser,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 const updateUser = catchAsync(async (req, res) => {
-  const post = await userService.updateUserById(req.params.postId, req.body);
-  res.send(post);
+  const { fullName, phone, email, password, role, country } = req.body;
+  const updateBody = { fullName, phone, email, password, role, country }; // Create an object containing update values
+  const updatedUser = await userService.updateUserById(req.params.userId, updateBody);
+  res.send(updatedUser);
 });
 
 const deleteUser = catchAsync(async (req, res) => {
+  console.log(req.params.postId, 'userIDDDD');
   await userService.deleteUserById(req.params.postId);
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -76,4 +102,5 @@ module.exports = {
   login,
   getAllUsers,
   findRole,
+  resetPassword,
 };

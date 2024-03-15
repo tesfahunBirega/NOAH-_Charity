@@ -17,6 +17,7 @@ module.exports = function findAll({ tableName, paginationOptions, sortOptions })
       .take(take)
       .getMany();
   }
+  
 
   if (sortOptions && Object.values(sortOptions).length > 0) {
     const { columnName, orderBy } = sortBy({ columnName: sortOptions.option });

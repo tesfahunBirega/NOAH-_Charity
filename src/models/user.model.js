@@ -10,6 +10,7 @@ class User extends Base {
     this.email = { type: 'varchar' };
     this.password = { type: 'varchar', nullable: true }; // Set nullable to true to indicate that password is not required
     this.role = { type: 'varchar' };
+    this.country = { type: 'varchar' };
   }
 }
 
