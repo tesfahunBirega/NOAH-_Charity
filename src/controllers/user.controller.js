@@ -84,7 +84,6 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  console.log(req.params.postId, 'userIDDDD');
   await userService.deleteUserById(req.params.postId);
   res.status(httpStatus.NO_CONTENT).send();
 });
