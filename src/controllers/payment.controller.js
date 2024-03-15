@@ -10,6 +10,15 @@ const processPayment = catchAsync(async (req, res) => {
   }
 });
 
+const getBalance = catchAsync(async (req, res) => {
+  try {
+    const Balances = await paymentService.getBalance();
+    res.status(200).json({ success: true, allBalance: Balances });
+  } catch (error) {
+    res.status(500).json({ Success: false, error: error.message });
+  }
+});
 module.exports = {
   processPayment,
+  getBalance,
 };
