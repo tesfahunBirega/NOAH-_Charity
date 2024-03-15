@@ -11,9 +11,8 @@ router.route('/').post(feedBackController.createFeedback).get(feedBackController
 // router.route('/login').post(authMiddleware, userController.login);
 
 router
-  .route('/:postId')
-  .get(validate(Validation.getUser), feedBackController.getFeedback)
-  .patch(validate(Validation.updateUser), feedBackController.updateUser)
+  .route('/:userId')
+  .patch(feedBackController.updateFeedback)
   .delete(validate(Validation.deleteUser), feedBackController.deleteUser);
 
 module.exports = router;

@@ -79,12 +79,14 @@ const resetPassword = async (req, res, next) => {
   }
 };
 const updateUser = catchAsync(async (req, res) => {
-  const { fullName, phone, email, password, role } = req.body;
-  const post = await userService.updateUserById(req.params.userId, fullName, phone, email, password, role);
-  res.send(post);
+  const { fullName, phone, email, password, role, country } = req.body;
+  const updateBody = { fullName, phone, email, password, role, country }; // Create an object containing update values
+  const updatedUser = await userService.updateUserById(req.params.userId, updateBody);
+  res.send(updatedUser);
 });
 
 const deleteUser = catchAsync(async (req, res) => {
+  console.log(req.params.postId, 'userIDDDD');
   await userService.deleteUserById(req.params.postId);
   res.status(httpStatus.NO_CONTENT).send();
 });

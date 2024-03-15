@@ -9,7 +9,7 @@ const dataSource = require('../utils/createDatabaseConnection');
 const { FeedBack } = require('../models');
 const { getConnection } = require('typeorm');
 
-const userRepository = dataSource.getRepository(FeedBack).extend({
+const feedBackRepository = dataSource.getRepository(FeedBack).extend({
   findAll,
   sortBy,
 });
@@ -25,42 +25,35 @@ const userRepository = dataSource.getRepository(FeedBack).extend({
 const createfeedback = async (ReqBody) => {
   // Generate a salt
   console.log(ReqBody, 'FeedBack data');
-  const doc = userRepository.create(ReqBody);
+  const doc = feedBackRepository.create(ReqBody);
   return userRepository.save(doc);
 };
 
-/**
- * Query for users
- * @param {Object} filter - Filter options
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
- */
-
-const queryUsers = async (filter, options) => {
-  const { limit, page, sortByOp } = options;
-  // Fetch users with role 'user'
-  const users = await userRepository.findAll({ where: { role: 'user' } });
-  return users;
+const getAllFeedBack = async () => {
+  return feedBackRepository.find();
 };
-
 /**
  * Delete user by id
  * @param {ObjectId} postId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (postId) => {
-  const post = await getUserById(postId);
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+
+const getFeedbackById = async (id) => {
+  return feedBackRepository.findOneBy({ id });
+};
+const updateFeedbackById = async (feedbackId, updateBody) => {
+  const feedback = await getFeedbackById(feedbackId);
+  if (!feedback) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
   }
-  return userRepository.delete({ id: postId });
+  const updateResult = await feedBackRepository.update({ id: feedbackId }, updateBody);
+  console.log(updateResult, 'updateResult');
+  const updatedFeedback = await getFeedbackById(feedbackId);
+  return { updatedFeedback };
 };
 
 module.exports = {
   createfeedback,
-  queryUsers,
-  deleteUserById,
+  getAllFeedBack,
+  updateFeedbackById,
 };

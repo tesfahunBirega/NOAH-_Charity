@@ -169,15 +169,14 @@ const getUserById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Post>}
  */
-const updateUserById = async (postId, updateBody) => {
-  const UserByID = await getUserById(postId);
-  if (!UserByID) {
+const updateUserById = async (userId, updateBody) => {
+  const userById = await getUserById(userId);
+  if (!userById) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  const update = await userRepository.update({ id: postId }, updateBody);
-  return update;
+  const updateResult = await userRepository.update({ id: userId }, updateBody); // Use updateBody to specify updated values
+  return updateResult;
 };
-
 /**
  * Delete user by id
  * @param {ObjectId} postId

@@ -17,23 +17,23 @@ const createFeedback = catchAsync(async (req, res) => {
   }
 });
 const getAllFeedback = catchAsync(async (req, res) => {
-  const Feedbacks = await feedBackService.getAllUsers();
-  res.send(users);
+  const Feedbacks = await feedBackService.getAllFeedBack();
+  res.send(Feedbacks);
 });
 const getFeedback = catchAsync(async (req, res) => {
   console.log(req.body, 'bodyyyyy');
 
   const filter = pick(req.query, ['title']);
-
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
 });
 
-const getUser = catchAsync(async (req, res) => {
-  const post = await userService.getUserById(req.params.postId);
+const updateFeedback = catchAsync(async (req, res) => {
+  const { is_seen } = req.body;
+  const post = await feedBackService.updateFeedbackById(req.params.userId, { is_seen }); // Pass is_seen directly
   if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'FeedBack not found');
   }
   res.send(post);
 });
@@ -75,7 +75,7 @@ const deleteUser = catchAsync(async (req, res) => {
 module.exports = {
   createFeedback,
   getFeedback,
-  getUser,
+  updateFeedback,
   updateUser,
   deleteUser,
   getAllFeedback,
