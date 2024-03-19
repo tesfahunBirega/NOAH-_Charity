@@ -19,7 +19,7 @@ const queryEvents = async () => {
   // eslint-disable-next-line no-shadow
   // const { limit, page, sortBy } = options;
 
-  const result = await eventRepository.findAll({ tableName: 'events'});
+  const result = await eventRepository.findAll({ tableName: 'events' });
   return result;
 };
 
