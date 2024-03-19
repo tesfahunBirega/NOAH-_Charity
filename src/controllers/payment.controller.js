@@ -18,7 +18,17 @@ const getBalance = catchAsync(async (req, res) => {
     res.status(500).json({ Success: false, error: error.message });
   }
 });
+
+const processSubscriptions = catchAsync(async (req, res) => {
+  try {
+    const result = await paymentService.processStripeSubscription(req.body);
+    res.status(200).json({ Success: true, clientSecret: result });
+  } catch (error) {
+    res.status(500).json({ Success: false, error: error.message });
+  }
+});
 module.exports = {
   processPayment,
   getBalance,
+  processSubscriptions,
 };

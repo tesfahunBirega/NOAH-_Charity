@@ -39,13 +39,66 @@ const processStripePayment = async (paymentData) => {
       success_url: 'http://localhost:3000/success',
       cancel_url: 'http://localhost:3000/cancel',
     });
-    const reg = registerDonation(amount);
+    // const reg = registerDonation(amount);
     return session;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
+const processStripeSubscription = async (subsciptionData) => {
+  let priceID;
+  try {
+    const amount = subsciptionData.subscription_ammount * 100;
+    switch (amount) {
+      case 5000:
+        priceID = 'price_1Ow0n7HGaAONVQkK8L1WEZf8';
+        break;
+      case 10000:
+        priceID = 'price_1Ow1ntHGaAONVQkKtWwnXn66';
+        break;
+      case 20000:
+        priceID = 'price_1Ow1ntHGaAONVQkKLUhWUPTa';
+        break;
+      case 25000:
+        priceID = 'price_1Ow1ntHGaAONVQkKRiGUtGkA';
+        break;
+      case 50000:
+        priceID = 'price_1Ow1ntHGaAONVQkKEuRJ3OE7';
+        break;
+      default:
+        try {
+          const newPrice = await stripe.prices.create({
+            unit_amount: amount, // Replace with the price in cents (e.g., $10.00)
+            currency: 'usd', // Replace with the currency of the price
+            recurring: {
+              interval: 'month', // Specify the interval of the subscription (e.g., 'month', 'year')
+            },
+            product: 'prod_PlXsWOsJh53OH3', // Specify the ID of the product you created
+          });
+          priceID = newPrice.id; // Assign the ID of the newly created price
+        } catch (error) {
+          throw new Error(error.message);
+        }
+        break;
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: priceID,
+          quantity: 1,
+        },
+      ],
+      mode: 'subscription',
+      success_url: 'http://localhost:3000/success',
+      cancel_url: 'http://localhost:3000/cancel',
+    });
+    return session;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 const getBalance = async () => {
   try {
     const result = await donationRepository.find();
@@ -57,4 +110,6 @@ const getBalance = async () => {
 module.exports = {
   processStripePayment,
   getBalance,
+  processStripeSubscription,
+  registerDonation,
 };
