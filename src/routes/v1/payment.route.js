@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.route('/process').post(paymentController.processPayment);
 router.route('/balance').get(paymentController.getBalance);
+router.route('/subscriptions').post(paymentController.processSubscriptions);
 
 module.exports = router;
