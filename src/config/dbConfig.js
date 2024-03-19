@@ -1,7 +1,6 @@
 const path = require('path');
 const configs = require('./config');
-const { User, UserProfile, userAdmin, Event, FeedBack,Donation } = require('../models/index');
-
+const { User, UserProfile, userAdmin, Event, FeedBack, Donation, Post } = require('../models/index');
 
 // const userProfile = require('../models/userProfile.model.js');
 // const userAdmin = require('../models/userAdmin.model.js');
@@ -16,8 +15,7 @@ module.exports = {
   password: configs.mysql.password, // Use MySQL password configuration
   database: configs.mysql.database, // Use MySQL database configuration
   // entities: [__dirname + "/../models/*.js"],
-  entities: [User, UserProfile, userAdmin, Event, FeedBack, Donation],
-
+  entities: [User, UserProfile, userAdmin, Event, FeedBack, Donation, Post],
 
   synchronize: false,
   // migrationsRun: true,
