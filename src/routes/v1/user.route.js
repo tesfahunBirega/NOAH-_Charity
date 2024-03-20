@@ -11,6 +11,7 @@ router
   .post(validate(Validation.createUser), userController.createUser)
   .get(validate(Validation.getUsers), userController.getAllUsers);
 router.route('/resetPassword').post(userController.resetPassword);
+router.route('/forgetPassword').post(userController.forgetPassword);
 
 router.route('/login').post(userController.login);
 // router.route('/login').post(authMiddleware, userController.login);
