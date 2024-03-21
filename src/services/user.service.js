@@ -25,40 +25,7 @@ const userRepository = dataSource.getRepository(User).extend({
 const hash = (pass) => {
   return bcrypt.hashSync(pass, 10);
 };
-const editUser = async (id, data) => {
-  try {
-    const idUser = id;
-    const updatedFields = data;
-    const connection = getConnection();
-    const userRepository = connection.getRepository(User);
-    const user = await userRepository.findOne({ where: { id: idUser } });
-    if (!user) {
-      throw new Error('User not found');
-    }
-    await userRepository.update(id, {
-      first_name: updatedFields?.first_name,
-      last_name: updatedFields?.last_name,
-      phone_number: updatedFields?.phone_number,
-      user_type: updatedFields?.user_type,
-      profile_pic: updatedFields?.profile_pic,
-    });
 
-    const userTeamRepository = connection.getRepository(TeamUser);
-    await userTeamRepository.delete({ user_id: id });
-
-    if (updatedFields.team_id) {
-      const teams = updatedFields.team_id;
-      const teamEntities = teams.map((teamId) => ({
-        user_id: id,
-        team_id: teamId,
-      }));
-      await userTeamRepository.save(teamEntities);
-    }
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
 const getUserByEmail = async (credentials) => {
   try {
     const { email, password } = credentials;
@@ -133,6 +100,32 @@ const login = async (credentials, expiresIn = '1h') => {
   return { user, token };
 };
 
+const resetPassword = async (restBody) => {
+  try {
+    // Extract email and newPassword from the request body
+    const { email, newPassword } = restBody;
+
+    // Find user by email
+    const user = await userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const updateResult = await userRepository.update({ id: user.id }, { password: hashedPassword });
+    // Update user's password using the repository method
+
+    // Check if update was successful
+    if (updateResult[0] === 0) {
+      throw new Error('Failed to update password.');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**
  * Query for users
  * @param {Object} filter - Filter options
@@ -195,6 +188,40 @@ const deleteUserById = async (postId) => {
   }
   return userRepository.delete({ id: postId });
 };
+// Function to generate a random password reset token
+const generateResetToken = () => {
+  const tokenLength = 20; // Length of the reset token
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
+  for (let i = 0; i < tokenLength; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    token += characters[randomIndex];
+  }
+  return token;
+};
+
+const forgetPassword = async (email) => {
+  try {
+    // Find user by email
+    const user = await userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    // Generate password reset token
+    const resetToken = generateResetToken(); // Implement your reset token generation logic
+
+    // Store reset token in the database or send it via email to the user
+    // For simplicity, assume the token is stored in the user object
+    user.resetToken = resetToken;
+    await userRepository.update({ resetToken }, { id: user.id });
+
+    // Return the reset token
+    return resetToken;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   createUser,
@@ -206,6 +233,7 @@ module.exports = {
   getAllUsers,
   findRole,
   getUserByEmail,
-  editUser,
   hash,
+  resetPassword,
+  forgetPassword,
 };

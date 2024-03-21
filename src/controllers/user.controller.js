@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const { emailService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
@@ -52,31 +53,25 @@ const getAllUsers = catchAsync(async (req, res) => {
   const users = await userService.getAllUsers();
   res.send(users);
 });
-const resetPassword = async (req, res, next) => {
+
+const resetPassword = async (req, res) => {
   try {
-    // Get Req Body
-    const { email } = req.body;
-    // Generate Password
-    let password = userService.hash('%TGBnhy6');
-    // Check User Existence
-    let user = await userService.getUserByEmail(email);
-    if (!user) {
-      return next(new ApiError('User Not Found!', 404));
-    }
+    const { email, newPassword } = req.body;
+    const restBody = { email, newPassword };
 
-    // Reset Password
-    user.password = password;
-    let passwordResetUser = await userService.editUser(user.id, user);
+    // Call the resetPassword method from the userService
+    await userService.resetPassword(restBody);
 
-    // Respond
-    res.status(200).json({
+    // Respond with success message
+    res.status(httpStatus.OK).json({
       status: 'Success',
-      data: passwordResetUser,
+      message: 'Password reset successfully.',
     });
   } catch (error) {
-    throw error;
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
+
 const updateUser = catchAsync(async (req, res) => {
   const { fullName, phone, email, password, role, country } = req.body;
   const updateBody = { fullName, phone, email, password, role, country }; // Create an object containing update values
@@ -93,6 +88,26 @@ const findRole = catchAsync(async (req, res) => {
   const result = await userService.findRole();
   res.send(result);
 });
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Call the forgetPassword method from the userService
+    const resetToken = await userService.forgetPassword(email);
+
+    // Send reset password email to the user
+    await emailService.sendResetPasswordEmail(email, resetToken);
+
+    // Respond with success message
+    res.status(httpStatus.OK).json({
+      status: 'Success',
+      message: 'Password reset token sent to your email.',
+    });
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -103,4 +118,5 @@ module.exports = {
   getAllUsers,
   findRole,
   resetPassword,
+  forgetPassword,
 };

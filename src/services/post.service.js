@@ -6,10 +6,10 @@ const sortBy = require('../utils/sorter');
 const findAll = require('./Plugins/findAll');
 const configs = require('../config/config');
 const dataSource = require('../utils/createDatabaseConnection');
-const { FeedBack } = require('../models');
+const { Post } = require('../models');
 const { getConnection } = require('typeorm');
 
-const feedBackRepository = dataSource.getRepository(FeedBack).extend({
+const postRepository = dataSource.getRepository(Post).extend({
   findAll,
   sortBy,
 });
@@ -22,14 +22,16 @@ const feedBackRepository = dataSource.getRepository(FeedBack).extend({
  * @returns {Promise<Post>}
  */
 
-const createfeedback = async (ReqBody) => {
-  // Generate a salt
-  const doc = feedBackRepository.create(ReqBody);
-  return userRepository.save(doc);
+const createPost = async ({ name, description, image }) => {
+  // Create a new post object with the provided details
+  const post = await postRepository.create({ name, description, image });
+
+  // Save the post to the database
+  return postRepository.save(post);
 };
 
-const getAllFeedBack = async () => {
-  return feedBackRepository.find();
+const getAllPost = async () => {
+  return postRepository.find();
 };
 /**
  * Delete user by id
@@ -37,22 +39,22 @@ const getAllFeedBack = async () => {
  * @returns {Promise<User>}
  */
 
-const getFeedbackById = async (id) => {
-  return feedBackRepository.findOneBy({ id });
+const getPostById = async (id) => {
+  return postRepository.findOneBy({ id });
 };
-const updateFeedbackById = async (feedbackId, updateBody) => {
-  const feedback = await getFeedbackById(feedbackId);
+const updatePostById = async (feedbackId, updateBody) => {
+  const feedback = await getPostById(feedbackId);
   if (!feedback) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
   }
-  const updateResult = await feedBackRepository.update({ id: feedbackId }, updateBody);
+  const updateResult = await postRepository.update({ id: feedbackId }, updateBody);
   console.log(updateResult, 'updateResult');
-  const updatedFeedback = await getFeedbackById(feedbackId);
+  const updatedFeedback = await getPostById(feedbackId);
   return { updatedFeedback };
 };
 
 module.exports = {
-  createfeedback,
-  getAllFeedBack,
-  updateFeedbackById,
+  createPost,
+  getAllPost,
+  updatePostById,
 };

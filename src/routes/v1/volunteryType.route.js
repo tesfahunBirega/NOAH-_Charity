@@ -1,0 +1,14 @@
+const express = require('express');
+const validate = require('../../middlewares/validate');
+const { volunteryValidation } = require('../../validations');
+const { volunteryTypeController } = require('../../controllers');
+// const authMiddleware = require('../../middlewares/authMiddleware');
+
+const router = express.Router();
+
+router
+  .route('/')
+  .post(validate(volunteryValidation.createVoluntery), volunteryTypeController.createVoluntery)
+  .get(validate(volunteryValidation.getVoluntery), volunteryTypeController.getAllVolunterys);
+
+module.exports = router;
