@@ -7,3 +7,4 @@ module.exports.Event = require('./event.model');
 module.exports.FeedBack = require('./feedBack.model');
 module.exports.Donation = require('./donations.model');
 module.exports.Post = require('./post.model');
+module.exports.Voluntery = require('./voluntery.model');

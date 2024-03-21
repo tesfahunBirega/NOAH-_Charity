@@ -7,6 +7,7 @@ const emailRoute = require('./mailchimp.route');
 const eventRoute = require('./event.route');
 const feedBackRoute = require('./feedBack.route');
 const postRoute = require('./post.route');
+const volunteryRoute = require('./volunteryType.route');
 
 // const docsRoute = require('./docs.route');
 // const config = require('../../config/config');
@@ -25,6 +26,10 @@ const defaultRoutes = [
   {
     path: '/userAdmin',
     route: userAdminRoute,
+  },
+  {
+    path: '/volunteryType',
+    route: volunteryRoute,
   },
   {
     path: '/payment',

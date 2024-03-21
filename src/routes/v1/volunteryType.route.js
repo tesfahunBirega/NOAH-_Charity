@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(validate(volunteryValidation.createVoluntery), volunteryTypeController.createvolunteryType)
+  .post(validate(volunteryValidation.createVoluntery), volunteryTypeController.createVoluntery)
   .get(validate(volunteryValidation.getVoluntery), volunteryTypeController.getAllPosts);
 
 module.exports = router;

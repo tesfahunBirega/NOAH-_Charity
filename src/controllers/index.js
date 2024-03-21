@@ -1,4 +1,5 @@
 module.exports.userController = require('./user.controller');
+module.exports.volunteryTypeController = require('./volunteryType.controller');
 module.exports.postController = require('./post.controller');
 module.exports.feedBackController = require('./feedBack.controller');
 module.exports.userProfileController = require('./userProfile.controller');
