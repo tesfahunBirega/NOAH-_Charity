@@ -9,6 +9,6 @@ const router = express.Router();
 router
   .route('/')
   .post(validate(volunteryValidation.createVoluntery), volunteryTypeController.createVoluntery)
-  .get(validate(volunteryValidation.getVoluntery), volunteryTypeController.getAllPosts);
+  .get(validate(volunteryValidation.getVoluntery), volunteryTypeController.getAllVolunterys);
 
 module.exports = router;
