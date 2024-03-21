@@ -55,13 +55,14 @@ const getAllUsers = catchAsync(async (req, res) => {
 const resetPassword = async (req, res, next) => {
   try {
     // Get Req Body
-    let email = req.body.email;
+    const { email } = req.body;
     // Generate Password
     let password = userService.hash('%TGBnhy6');
-    return password;
     // Check User Existence
     let user = await userService.getUserByEmail(email);
-    if (!user) return next(new ApiError('User Not Found!', 404));
+    if (!user) {
+      return next(new ApiError('User Not Found!', 404));
+    }
 
     // Reset Password
     user.password = password;
