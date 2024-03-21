@@ -14,9 +14,11 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}_${file.originalname}`);
   },
 });
+const publicDirectoryPath = path.join(__dirname, 'public');
 
 const uploade = multer({ storage });
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(publicDirectoryPath));
+
 const router = express.Router();
 
 router

@@ -16,7 +16,7 @@ const createPost = catchAsync(async (req, res) => {
     const post = await postService.createPost({ name, description, image });
 
     // Construct the URL for the uploaded image
-    const imageUrl = `${req.protocol}://${req.get('host')}/public/${image}`;
+    const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${image}`;
 
     // Respond with success and image URL
     res.status(httpStatus.CREATED).json({
@@ -30,30 +30,41 @@ const createPost = catchAsync(async (req, res) => {
   }
 });
 
+// const getAllPost = catchAsync(async (req, res) => {
+//   const posts = await postService.getAllPost();
+//   res.send(posts);
+// });
+
 const getAllPosts = catchAsync(async (req, res) => {
-  const posts = await postService.getAllPost();
-  res.send(Feedbacks);
-});
-const getFeedback = catchAsync(async (req, res) => {
-  console.log(req.body, 'bodyyyyy');
+  try {
+    // Fetch all posts from the database using the postService
+    const posts = await postService.getAllPost();
 
-  const filter = pick(req.query, ['title']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await userService.queryUsers(filter, options);
-  res.send(result);
-});
+    // Map each post to include the image URL
+    const postsWithImageUrl = posts.map((post) => {
+      const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${post.image}`;
+      return {
+        id: post.id,
+        createdAt: post.createdAt,
+        name: post.name,
+        description: post.description,
+        image: post.image,
+        imageUrl: imageUrl,
+      };
+    });
 
-const updatePost = catchAsync(async (req, res) => {
-  const { is_seen } = req.body;
-  const post = await feedBackService.updatePostById(req.params.userId, { is_seen }); // Pass is_seen directly
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'FeedBack not found');
+    // Respond with the posts including image URLs
+    res.status(httpStatus.OK).json({
+      status: 'Success',
+      posts: postsWithImageUrl,
+    });
+  } catch (error) {
+    // Handle errors
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
-  res.send(post);
 });
 
 module.exports = {
   createPost,
-  updatePost,
   getAllPosts,
 };

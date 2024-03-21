@@ -17,6 +17,7 @@ const app = express();
 
 // Initialize Passport
 app.use(passport.initialize());
+app.use('/v1/public', express.static('public'));
 
 // JWT Strategy configuration
 const JwtStrategy = passportJWT.Strategy;
