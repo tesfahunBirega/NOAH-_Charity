@@ -39,17 +39,16 @@ const getAllVoluntery = async () => {
  */
 
 const getVolunteryById = async (id) => {
-  return postRepository.findOneBy({ id });
+  return volunteryRepository.findOneBy({ id });
 };
-const updateVolunteryById = async (feedbackId, updateBody) => {
-  const feedback = await getPostById(feedbackId);
-  if (!feedback) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
+const updateVolunteryById = async (VolunteryId, updateBody) => {
+  const Voluntery = await getVolunteryById(VolunteryId);
+  if (!Voluntery) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Voluntery not found');
   }
-  const updateResult = await postRepository.update({ id: feedbackId }, updateBody);
-  console.log(updateResult, 'updateResult');
-  const updatedFeedback = await getPostById(feedbackId);
-  return { updatedFeedback };
+  const updateResult = await postRepository.update({ id: VolunteryId }, updateBody);
+  const updatedVoluntery = await getPostById(VolunteryId);
+  return { updatedVoluntery };
 };
 
 module.exports = {

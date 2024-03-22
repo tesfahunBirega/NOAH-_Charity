@@ -7,7 +7,7 @@ const createVoluntery = {
   }),
 };
 
-const getVoluntery = {
+const getVolunterys = {
   query: Joi.object().keys({
     title: Joi.string(),
     sortBy: Joi.string(),
@@ -16,15 +16,15 @@ const getVoluntery = {
   }),
 };
 
-const getEvent = {
+const getVoluntery = {
   params: Joi.object().keys({
-    postId: Joi.string(),
+    volunteryId: Joi.string(),
   }),
 };
 
-const updateEvent = {
+const updateVoluntery = {
   params: Joi.object().keys({
-    eventId: Joi.required(),
+    volunteryId: Joi.required(),
   }),
   body: Joi.object()
     .keys({
@@ -34,13 +34,16 @@ const updateEvent = {
     .min(1),
 };
 
-const deleteEvent = {
+const deleteVoluntery = {
   params: Joi.object().keys({
-    postId: Joi.string(),
+    volunteryId: Joi.string(),
   }),
 };
 
 module.exports = {
   createVoluntery,
+  getVolunterys,
   getVoluntery,
+  updateVoluntery,
+  deleteVoluntery,
 };
