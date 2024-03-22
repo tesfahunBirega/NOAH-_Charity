@@ -28,7 +28,7 @@ const processStripePayment = async (paymentData) => {
               name: 'Donate',
               description:
                 'Your donation will help us continue improving the lives of internally displaced persons in Ethiopia.',
-              images: ['https://ngh1.org/assets/IMG-20240223-WA0001(1).jpg'],
+              images: ['https://ngh1.org/assets/logo-485d8758.png'],
             },
             unit_amount: amount,
           },
