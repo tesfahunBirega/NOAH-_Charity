@@ -8,7 +8,6 @@ const { emailService } = require('../services');
 const createUser = catchAsync(async (req, res) => {
   try {
     const { fullName, phone, email, password, role, country, volenteerTypeId } = req.body;
-
     const user = await userService.createUser({ fullName, phone, email, password, role, country, volenteerTypeId });
 
     res.status(httpStatus.CREATED).send(user);
@@ -86,7 +85,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 const findRole = catchAsync(async (req, res) => {
   const result = await userService.findRole();
-  res.status(httpStatus[200]).send(result);
+  res.send(result);
 });
 
 const forgetPassword = async (req, res) => {

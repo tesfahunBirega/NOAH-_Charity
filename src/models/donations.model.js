@@ -6,6 +6,9 @@ class Donation extends Base {
   constructor() {
     super();
     this.amount = { type: 'int' };
+    this.email = { type: 'varchar' };
+    this.phone = { type: 'varchar' };
+    this.name = { type: 'varchar' };
   }
 }
 
