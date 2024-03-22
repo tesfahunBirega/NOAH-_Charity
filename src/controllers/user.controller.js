@@ -88,6 +88,7 @@ const findRole = catchAsync(async (req, res) => {
   const result = await userService.findRole();
   res.send(result);
 });
+
 const forgetPassword = async (req, res) => {
   try {
     const { email } = req.body;

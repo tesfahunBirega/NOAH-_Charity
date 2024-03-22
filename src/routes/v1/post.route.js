@@ -1,12 +1,12 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+
+const app = express();
 const validate = require('../../middlewares/validate');
 const { Validation } = require('../../validations');
 const { postController } = require('../../controllers');
 // const authMiddleware = require('../../middlewares/authMiddleware');
-const app = express();
-
-const multer = require('multer');
-const path = require('path');
 
 const storage = multer.diskStorage({
   destination: 'public',

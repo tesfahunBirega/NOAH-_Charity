@@ -23,9 +23,9 @@ const feedBackRepository = dataSource.getRepository(FeedBack).extend({
  */
 
 const createfeedback = async (ReqBody) => {
-  // Generate a salt
   const doc = feedBackRepository.create(ReqBody);
-  return userRepository.save(doc);
+  const save = feedBackRepository.save(doc);
+  return save;
 };
 
 const getAllFeedBack = async () => {
@@ -38,7 +38,7 @@ const getAllFeedBack = async () => {
  */
 
 const getFeedbackById = async (id) => {
-  return feedBackRepository.findOneBy({ id });
+  return feedBackRepository.findOne({ where: { id } });
 };
 const updateFeedbackById = async (feedbackId, updateBody) => {
   const feedback = await getFeedbackById(feedbackId);
@@ -46,7 +46,6 @@ const updateFeedbackById = async (feedbackId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
   }
   const updateResult = await feedBackRepository.update({ id: feedbackId }, updateBody);
-  console.log(updateResult, 'updateResult');
   const updatedFeedback = await getFeedbackById(feedbackId);
   return { updatedFeedback };
 };

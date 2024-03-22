@@ -28,17 +28,22 @@ const queryEvents = async () => {
 };
 
 const getEventById = async (id) => {
-  const result = await eventRepository.findOneBy({ id });
+  const result = await eventRepository.findOne({ where: { id } });
   return result;
 };
 
 const updateEventById = async (postId, updateBody) => {
+  let result;
   const event = await getEventById(postId);
   if (!event) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
-  await eventRepository.update({ id: postId }, updateBody);
-  const result = await getEventById(postId);
+  const update = await eventRepository.update({ id: postId }, updateBody);
+  if (update) {
+    result = await getEventById(postId);
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+  }
   return result;
 };
 

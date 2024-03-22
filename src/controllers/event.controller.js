@@ -25,7 +25,7 @@ const getEvent = catchAsync(async (req, res) => {
 });
 
 const updateEvent = catchAsync(async (req, res) => {
-  const post = await eventService.updateEventById(req.params.postId, req.body);
+  const post = await eventService.updateEventById(req.params.eventId, req.body);
   res.send(post);
 });
 
