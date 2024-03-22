@@ -1,14 +1,20 @@
 const stripe = require('stripe')(require('../config/paymentConfig').stripeApiKey);
+const { child } = require('../config/logger');
 const { Donation } = require('../models');
 const dataSource = require('../utils/createDatabaseConnection');
 
 const donationRepository = dataSource.getRepository(Donation);
 
-const registerDonation = async (amount1) => {
+const registerDonation = async (donation) => {
   try {
-    const amount = amount1 / 100;
-    Donation.amount = amount;
-    const register = donationRepository.create(Donation);
+    const { amount1, email, phone, name } = donation;
+    const amount = amount1;
+    const donate = {};
+    donate.amount = amount;
+    donate.email = email;
+    donate.phone = phone;
+    donate.name = name;
+    const register = await donationRepository.create(donate);
     const result = await donationRepository.save(register);
     return result;
   } catch (error) {

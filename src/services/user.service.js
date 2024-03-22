@@ -75,7 +75,6 @@ const createUser = async (ReqBody) => {
   const doc = userRepository.create(ReqBody);
   const result = userRepository.save(doc);
   return result;
-  // return ReqBody;
 };
 
 const login = async (credentials, expiresIn = '1h') => {
@@ -219,10 +218,10 @@ const forgetPassword = async (email) => {
 };
 
 const findRole = async () => {
-  const resultAdmin = userRepository.find();
-  const resultSuperAdmin = userRepository.find({ where: { role: 'superadmin' } });
+  const resultAdmin = await userRepository.find({ where: { role: 'admin' } });
+  const resultSuperAdmin = await userRepository.find({ where: { role: 'superadmin' } });
   const result = [...resultAdmin, ...resultSuperAdmin];
-  return resultAdmin;
+  return result;
 };
 
 module.exports = {

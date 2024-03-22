@@ -12,7 +12,7 @@ class User extends Base {
     this.role = { type: 'varchar' };
     this.country = { type: 'varchar' };
     this.resetToken = { type: 'varchar' };
-    this.volunteerTypeId = { type: 'varchar', nullable: true };
+    this.volenteerTypeId = { type: 'varchar' };
   }
 }
 

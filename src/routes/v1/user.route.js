@@ -15,14 +15,13 @@ router.route('/forgetPassword').post(userController.forgetPassword);
 
 router.route('/login').post(userController.login);
 // router.route('/login').post(authMiddleware, userController.login);
+router.route('/new').get(userController.findRole);
 
 router
   .route('/:userId')
   .get(validate(Validation.getUser), userController.getUser)
   .patch(validate(Validation.updateUser), userController.updateUser)
   .delete(validate(Validation.deleteUser), userController.deleteUser);
-
-router.route('/roles').get(userController.findRole);
 
 module.exports = router;
 

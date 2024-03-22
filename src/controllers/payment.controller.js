@@ -28,6 +28,14 @@ const processSubscriptions = catchAsync(async (req, res) => {
   }
 });
 
+const registerDonation = catchAsync(async (req, res) => {
+  try {
+    const result = await paymentService.registerDonation(req.body);
+    res.status(200).json({ Success: true, result });
+  } catch (error) {
+    res.status(500).json({ Success: false, error: error.message });
+  }
+});
 const webhook = catchAsync(async (req, res) => {
   try {
     const result = await paymentService.webhook(req);
@@ -41,4 +49,5 @@ module.exports = {
   getBalance,
   processSubscriptions,
   webhook,
+  registerDonation,
 };
