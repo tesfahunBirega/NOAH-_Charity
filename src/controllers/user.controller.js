@@ -86,7 +86,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 const findRole = catchAsync(async (req, res) => {
   const result = await userService.findRole();
-  res.send(result);
+  res.status(httpStatus[200]).send(result);
 });
 
 const forgetPassword = async (req, res) => {

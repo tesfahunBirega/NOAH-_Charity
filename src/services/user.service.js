@@ -73,7 +73,9 @@ const createUser = async (ReqBody) => {
   }
   // Generate a salt
   const doc = userRepository.create(ReqBody);
-  return userRepository.save(doc);
+  const result = userRepository.save(doc);
+  return result;
+  // return ReqBody;
 };
 
 const login = async (credentials, expiresIn = '1h') => {
@@ -151,13 +153,6 @@ const getAllUsers = async () => {
   return userRepository.find({ where: { role: 'volenteer' } });
 };
 
-const findRole = async () => {
-  const resultAdmin = userRepository.findAll({ where: { role: 'admin' } });
-  const resultSuperAdmin = userRepository.findAll({ where: { role: 'superadmin' } });
-  const result = [...resultAdmin, ...resultSuperAdmin];
-  return result;
-};
-
 const getUserById = async (id) => {
   return userRepository.findOneBy({ id });
 };
@@ -221,6 +216,13 @@ const forgetPassword = async (email) => {
   } catch (error) {
     throw error;
   }
+};
+
+const findRole = async () => {
+  const resultAdmin = userRepository.find();
+  const resultSuperAdmin = userRepository.find({ where: { role: 'superadmin' } });
+  const result = [...resultAdmin, ...resultSuperAdmin];
+  return resultAdmin;
 };
 
 module.exports = {

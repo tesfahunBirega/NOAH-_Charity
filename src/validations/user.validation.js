@@ -8,6 +8,7 @@ const createUser = {
     password: Joi.string(),
     role: Joi.string(),
     country: Joi.string(),
+    volenteerTypeId: Joi.string(),
   }),
 };
 
