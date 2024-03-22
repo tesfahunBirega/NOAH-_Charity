@@ -12,6 +12,7 @@ class User extends Base {
     this.role = { type: 'varchar' };
     this.country = { type: 'varchar' };
     this.resetToken = { type: 'varchar' };
+    this.volunteerTypeId = { type: 'varchar', nullable: true };
   }
 }
 
@@ -20,20 +21,20 @@ module.exports = new EntitySchema({
   tableName: 'users',
   columns: new User(),
 
-  relations: {
-    userAdmin: {
-      type: 'many-to-one',
-      target: 'UserAdmin',
-      inverseSide: 'users',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-    userProfile: {
-      type: 'many-to-one',
-      target: 'UserProfile',
-      inverseSide: 'users',
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-  },
+  // relations: {
+  //   userAdmin: {
+  //     type: 'many-to-one',
+  //     target: 'UserAdmin',
+  //     inverseSide: 'users',
+  //     onDelete: 'CASCADE',
+  //     onUpdate: 'CASCADE',
+  //   },
+  //   userProfile: {
+  //     type: 'many-to-one',
+  //     target: 'UserProfile',
+  //     inverseSide: 'users',
+  //     onDelete: 'CASCADE',
+  //     onUpdate: 'CASCADE',
+  //   },
+  // },
 });

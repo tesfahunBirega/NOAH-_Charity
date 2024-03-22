@@ -1,13 +1,9 @@
 const httpStatus = require('http-status');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const ApiError = require('../utils/ApiError');
 const sortBy = require('../utils/sorter');
 const findAll = require('./Plugins/findAll');
-const configs = require('../config/config');
 const dataSource = require('../utils/createDatabaseConnection');
 const { FeedBack } = require('../models');
-const { getConnection } = require('typeorm');
 
 const feedBackRepository = dataSource.getRepository(FeedBack).extend({
   findAll,
@@ -46,7 +42,12 @@ const updateFeedbackById = async (feedbackId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
   }
   const updateResult = await feedBackRepository.update({ id: feedbackId }, updateBody);
-  const updatedFeedback = await getFeedbackById(feedbackId);
+  let updatedFeedback;
+  if (updateResult) {
+    updatedFeedback = await getFeedbackById(feedbackId);
+  } else {
+    return 'none updated';
+  }
   return { updatedFeedback };
 };
 

@@ -120,6 +120,7 @@ const webhook = async (requestData) => {
       //   // Then define and call a function to handle the event checkout.session.async_payment_succeeded
       //   break;
       case 'checkout.session.completed':
+        // eslint-disable-next-line no-case-declarations
         const checkoutSessionCompleted = event.data.object;
         // Then define and call a function to handle the event checkout.session.completed
         if (checkoutSessionCompleted) {
@@ -128,6 +129,7 @@ const webhook = async (requestData) => {
         }
         break;
       case 'customer.subscription.created':
+        // eslint-disable-next-line no-case-declarations
         const customerSubscriptionCreated = event.data.object;
         // Then define and call a function to handle the event customer.subscription.created
         if (customerSubscriptionCreated) {
