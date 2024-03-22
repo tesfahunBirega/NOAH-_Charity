@@ -27,8 +27,22 @@ const getAllVolunterys = catchAsync(async (req, res) => {
   const voluntery = await volunteryService.getAllVoluntery();
   res.send(voluntery);
 });
-
+const getVoluntery = catchAsync(async (req, res) => {
+  const Voluntery = await volunteryService.getVolunteryById(req.params.volunteryId);
+  if (!Voluntery) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Voluntery not found');
+  }
+  res.send(Voluntery);
+});
+const updateVoluntery = catchAsync(async (req, res) => {
+  const { name, description } = req.body;
+  const updateBody = { name, description }; // Create an object containing update values
+  const updatedUser = await volunteryService.updateVolunteryById(req.params.volunteryId, updateBody);
+  res.send(updatedUser);
+});
 module.exports = {
   createVoluntery,
   getAllVolunterys,
+  getVoluntery,
+  updateVoluntery,
 };
