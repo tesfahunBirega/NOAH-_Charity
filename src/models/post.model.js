@@ -8,6 +8,7 @@ class Post extends Base {
     this.name = { type: 'varchar' };
     this.description = { type: 'text' };
     this.image = { type: 'varchar' };
+    this.post_date = { type: 'datetime' };
   }
 }
 
