@@ -7,9 +7,9 @@ const { emailService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
-    const { fullName, phone, email, password, role, country } = req.body;
+    const { fullName, phone, email, password, role, country, volenteerTypeId } = req.body;
 
-    const user = await userService.createUser({ fullName, phone, email, password, role, country });
+    const user = await userService.createUser({ fullName, phone, email, password, role, country, volenteerTypeId });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {

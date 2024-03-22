@@ -2,11 +2,11 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { feedBackService } = require('../services');
+const { feedBackService, userService } = require('../services');
 
 const createFeedback = catchAsync(async (req, res) => {
   try {
-    const { name, email, message, is_seen } = req.body;
+    const { name, email, message } = req.body;
 
     const user = await feedBackService.createfeedback({ name, email, message });
 
@@ -21,8 +21,6 @@ const getAllFeedback = catchAsync(async (req, res) => {
   res.send(Feedbacks);
 });
 const getFeedback = catchAsync(async (req, res) => {
-  console.log(req.body, 'bodyyyyy');
-
   const filter = pick(req.query, ['title']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
@@ -38,30 +36,6 @@ const updateFeedback = catchAsync(async (req, res) => {
   res.send(post);
 });
 
-const resetPassword = async (req, res, next) => {
-  try {
-    // Get Req Body
-    let email = req.body.email;
-    // Generate Password
-    let password = userService.hash('%TGBnhy6');
-    return password;
-    // Check User Existence
-    let user = await userService.getUserByEmail(email);
-    if (!user) return next(new ApiError('User Not Found!', 404));
-
-    // Reset Password
-    user.password = password;
-    let passwordResetUser = await userService.editUser(user.id, user);
-
-    // Respond
-    res.status(200).json({
-      status: 'Success',
-      data: passwordResetUser,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
 const updateUser = catchAsync(async (req, res) => {
   const post = await userService.updateUserById(req.params.postId, req.body);
   res.send(post);
@@ -79,5 +53,4 @@ module.exports = {
   updateUser,
   deleteUser,
   getAllFeedback,
-  resetPassword,
 };

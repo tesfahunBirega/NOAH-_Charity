@@ -138,7 +138,7 @@ const resetPassword = async (restBody) => {
 
 const queryUsers = async () => {
   // Fetch users with role 'user'
-  const users = await userRepository.findAll({ where: { role: 'user' } });
+  const users = await userRepository.findAll({ where: { role: 'volenteer' } });
   return users;
 };
 
@@ -148,7 +148,7 @@ const queryUsers = async () => {
  * @returns {Promise<Post>}
  */
 const getAllUsers = async () => {
-  return userRepository.find({ where: { role: 'user' } });
+  return userRepository.find({ where: { role: 'volenteer' } });
 };
 
 const findRole = async () => {
