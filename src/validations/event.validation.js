@@ -28,8 +28,12 @@ const updateEvent = {
   }),
   body: Joi.object()
     .keys({
-      title: Joi.string(),
-      body: Joi.string(),
+      name: Joi.string(),
+      date: Joi.date(),
+      eventAddress: Joi.string(),
+      charityAddress: Joi.string(),
+      description: Joi.string(),
+      isActive: Joi.required(),
     })
     .min(1),
 };

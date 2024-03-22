@@ -7,7 +7,7 @@ const findAll = require('./Plugins/findAll');
 const configs = require('../config/config');
 const dataSource = require('../utils/createDatabaseConnection');
 const { User } = require('../models');
-const { getConnection } = require('typeorm');
+// const { getConnection } = require('typeorm');
 
 const userRepository = dataSource.getRepository(User).extend({
   findAll,
@@ -152,8 +152,8 @@ const getAllUsers = async () => {
 };
 
 const findRole = async () => {
-  const resultAdmin = userRepository.find({ where: { role: 'admin' } });
-  const resultSuperAdmin = userRepository.find({ where: { role: 'superAdmin' } });
+  const resultAdmin = userRepository.findAll({ where: { role: 'admin' } });
+  const resultSuperAdmin = userRepository.findAll({ where: { role: 'superadmin' } });
   const result = [...resultAdmin, ...resultSuperAdmin];
   return result;
 };

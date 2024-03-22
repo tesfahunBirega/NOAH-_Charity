@@ -39,7 +39,6 @@ const processStripePayment = async (paymentData) => {
       success_url: 'http://localhost:3000/success',
       cancel_url: 'http://localhost:3000/cancel',
     });
-    // const reg = registerDonation(amount);
     return session;
   } catch (error) {
     throw new Error(error.message);
@@ -107,9 +106,46 @@ const getBalance = async () => {
     throw new Error(error.message);
   }
 };
+
+const webhook = async (requestData) => {
+  try {
+    const event = requestData.body;
+
+    const signature = requestData.headers['stripe-signature'];
+    const webhookSecret = 'whsec_Mwr1jO0NuQUnxqHmTJexkeao0HLq1Qdi'; // Replace with your webhook secret key
+    const eventVerified = stripe.webhooks.constructEvent(requestData.rawBody, signature, webhookSecret);
+    switch (eventVerified.type) {
+      // case 'checkout.session.async_payment_succeeded':
+      //   const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+      //   // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+      //   break;
+      case 'checkout.session.completed':
+        const checkoutSessionCompleted = event.data.object;
+        // Then define and call a function to handle the event checkout.session.completed
+        if (checkoutSessionCompleted) {
+          const register = registerDonation(event.data.object);
+          return register;
+        }
+        break;
+      case 'customer.subscription.created':
+        const customerSubscriptionCreated = event.data.object;
+        // Then define and call a function to handle the event customer.subscription.created
+        if (customerSubscriptionCreated) {
+          const register = registerDonation(event.data.object);
+          return register;
+        }
+        break;
+      default:
+        return 'The payment did not go through';
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 module.exports = {
   processStripePayment,
   getBalance,
   processStripeSubscription,
   registerDonation,
+  webhook,
 };

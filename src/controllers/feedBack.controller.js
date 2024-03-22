@@ -8,7 +8,7 @@ const createFeedback = catchAsync(async (req, res) => {
   try {
     const { name, email, message, is_seen } = req.body;
 
-    const user = await feedBackService.createfeedback({ name, email, message, is_seen });
+    const user = await feedBackService.createfeedback({ name, email, message });
 
     res.status(httpStatus.CREATED).send(user);
   } catch (error) {

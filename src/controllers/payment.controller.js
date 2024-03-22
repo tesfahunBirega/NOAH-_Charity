@@ -27,8 +27,18 @@ const processSubscriptions = catchAsync(async (req, res) => {
     res.status(500).json({ Success: false, error: error.message });
   }
 });
+
+const webhook = catchAsync(async (req, res) => {
+  try {
+    const result = await paymentService.webhook(req);
+    res.status(200).json({ Success: true, writeOpperation: result });
+  } catch (error) {
+    res.status(500).json({ Success: false, error: error.message });
+  }
+});
 module.exports = {
   processPayment,
   getBalance,
   processSubscriptions,
+  webhook,
 };
