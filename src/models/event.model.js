@@ -9,6 +9,9 @@ class Event extends Base {
     this.eventAddress = { type: 'varchar' };
     this.description = { type: 'varchar' };
     this.date = { type: 'datetime' };
+    this.event_time = { type: 'datetime' };
+    this.event_price = { type: 'double' };
+    this.image = { type: 'varchar' };
     this.charityAddress = { type: 'varchar' };
     this.isActive = { type: 'boolean', nullable: true };
   }
