@@ -1,5 +1,4 @@
 const stripe = require('stripe')(require('../config/paymentConfig').stripeApiKey);
-const { child } = require('../config/logger');
 const { Donation } = require('../models');
 const dataSource = require('../utils/createDatabaseConnection');
 
@@ -42,8 +41,8 @@ const processStripePayment = async (paymentData) => {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/cancel',
+      success_url: 'http://localhost:5173/success',
+      cancel_url: 'http://localhost:5173/donation',
     });
     return session;
   } catch (error) {
@@ -96,10 +95,9 @@ const processStripeSubscription = async (subsciptionData) => {
         },
       ],
       mode: 'subscription',
-      success_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/cancel',
+      success_url: 'http://localhost:5173/success',
+      cancel_url: 'http://localhost:5173/donation',
     });
-    return session;
   } catch (error) {
     throw new Error(error.message);
   }
