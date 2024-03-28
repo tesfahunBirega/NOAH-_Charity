@@ -5,8 +5,18 @@ const catchAsync = require('../utils/catchAsync');
 const { eventService } = require('../services');
 
 const createEvent = catchAsync(async (req, res) => {
-  const post = await eventService.createEvent(req.body);
-  res.status(httpStatus.CREATED).send(post);
+  const image = req.file ? req.file.filename : null;
+  const { name, date, event_time, event_price, charityAddress } = req.body;
+  const post = await eventService.createEvent({ name, date, event_time, event_price, charityAddress, image });
+  const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${image}`;
+
+  // Respond with success and image URL
+  res.status(httpStatus.CREATED).json({
+    status: 'Success',
+    imageUrl: imageUrl,
+    post: post,
+  });
+  // res.status(httpStatus.CREATED).send(post);
 });
 
 const getEvents = catchAsync(async (req, res) => {

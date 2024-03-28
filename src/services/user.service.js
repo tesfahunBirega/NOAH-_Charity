@@ -8,7 +8,12 @@ const configs = require('../config/config');
 const dataSource = require('../utils/createDatabaseConnection');
 const { User } = require('../models');
 // const { getConnection } = require('typeorm');
+const { Voluntery } = require('../models');
 
+const volunteryRepository = dataSource.getRepository(Voluntery).extend({
+  findAll,
+  sortBy,
+});
 const userRepository = dataSource.getRepository(User).extend({
   findAll,
   sortBy,
@@ -149,7 +154,29 @@ const queryUsers = async () => {
  * @returns {Promise<Post>}
  */
 const getAllUsers = async () => {
-  return userRepository.find({ where: { role: 'volenteer' } });
+  // Fetch users with the 'volunteer' role
+  const users = await userRepository.find({ where: { role: 'volenteer' } });
+
+  // Retrieve volunteer information for each user
+  const usersWithVolunteerInfo = [];
+  for (const user of users) {
+    // Perform a query to find the volunteer type based on the volunteerTypeId
+    const volunteerInfo = await volunteryRepository.findOne({ where: { id: user.volenteerTypeId } });
+    // Add the volunteer information to the user object
+    const userWithVolunteerInfo = {
+      data: {
+        name: user.fullName,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        country: user.country,
+        volunteer: volunteerInfo,
+      },
+    };
+    usersWithVolunteerInfo.push(userWithVolunteerInfo);
+  }
+
+  return usersWithVolunteerInfo;
 };
 
 const getUserById = async (id) => {
