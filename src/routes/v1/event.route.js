@@ -29,7 +29,4 @@ router
   .patch(validate(eventValidation.updateEvent), eventController.updateEvent)
   .delete(validate(eventValidation.deleteEvent), eventController.deleteEvent);
 
-router.route('/post').post(eventController.createPost).get(eventController.getPosts);
-
-router.route('/:postId').get(eventController.getPost).patch(eventController.updatePost).delete(eventController.deletePost);
 module.exports = router;

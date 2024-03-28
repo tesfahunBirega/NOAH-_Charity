@@ -40,9 +40,15 @@ const updateVoluntery = catchAsync(async (req, res) => {
   const updatedUser = await volunteryService.updateVolunteryById(req.params.volunteryId, updateBody);
   res.send(updatedUser);
 });
+
+const deleteVoluntery = catchAsync(async (req, res) => {
+  await volunteryService.deleteVoluntery(req.params.volunteryId);
+  res.status(httpStatus.NO_CONTENT);
+});
 module.exports = {
   createVoluntery,
   getAllVolunterys,
   getVoluntery,
   updateVoluntery,
+  deleteVoluntery,
 };

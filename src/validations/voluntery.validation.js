@@ -28,8 +28,8 @@ const updateVoluntery = {
   }),
   body: Joi.object()
     .keys({
-      title: Joi.string(),
-      body: Joi.string(),
+      name: Joi.string(),
+      description: Joi.string(),
     })
     .min(1),
 };

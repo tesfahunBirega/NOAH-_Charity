@@ -164,14 +164,12 @@ const getAllUsers = async () => {
     const volunteerInfo = await volunteryRepository.findOne({ where: { id: user.volenteerTypeId } });
     // Add the volunteer information to the user object
     const userWithVolunteerInfo = {
-      data: {
-        name: user.fullName,
-        email: user.email,
-        role: user.role,
-        phone: user.phone,
-        country: user.country,
-        volunteer: volunteerInfo,
-      },
+      name: user.fullName,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      country: user.country,
+      volunteer: volunteerInfo,
     };
     usersWithVolunteerInfo.push(userWithVolunteerInfo);
   }
@@ -195,20 +193,42 @@ const updateUserById = async (userId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
   const updateResult = await userRepository.update({ id: userId }, updateBody); // Use updateBody to specify updated values
-  return updateResult;
+  let updateResultUser;
+  if (updateResult) {
+    updateResultUser = await getUserById(userId);
+  } else {
+    return 'none updated';
+  }
+  return { updateResultUser };
 };
 /**
  * Delete user by id
  * @param {ObjectId} postId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (postId) => {
-  const post = await getUserById(postId);
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+const deleteUserById = async (userId) => {
+  try {
+    // Retrieve the user data before deletion
+    const userToDelete = await getUserById(userId);
+    if (!userToDelete) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    // Attempt to delete the user
+    const deletionResult = await userRepository.delete({ id: userId });
+
+    // Check if the user was successfully deleted
+    if (!deletionResult || deletionResult.affected === 0) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete user');
+    }
+
+    // Return the user data after deletion
+    return userToDelete;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
-  return userRepository.delete({ id: postId });
 };
+
 // Function to generate a random password reset token
 const generateResetToken = () => {
   const tokenLength = 20; // Length of the reset token
