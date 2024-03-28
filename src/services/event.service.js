@@ -13,8 +13,8 @@ const postRepository = dataSource.getRepository(Post).extend({
   findAll,
   sortBy,
 });
-const createEvent = async (name, date, event_time, event_price, charityAddress, image) => {
-  const doc = eventRepository.create(name, date, event_time, event_price, charityAddress, image);
+const createEvent = async (name, date, event_time, event_price, charityAddress, image, description) => {
+  const doc = eventRepository.create(name, date, event_time, event_price, charityAddress, image, description);
   const result = await eventRepository.save(doc);
   return result;
 };

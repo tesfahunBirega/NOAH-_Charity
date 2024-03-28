@@ -6,8 +6,8 @@ const { eventService } = require('../services');
 
 const createEvent = catchAsync(async (req, res) => {
   const image = req.file ? req.file.filename : null;
-  const { name, date, event_time, event_price, charityAddress } = req.body;
-  const post = await eventService.createEvent({ name, date, event_time, event_price, charityAddress, image });
+  const { name, date, event_time, event_price, charityAddress, description } = req.body;
+  const post = await eventService.createEvent({ name, date, event_time, event_price, charityAddress, image, description });
   const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${image}`;
 
   // Respond with success and image URL
