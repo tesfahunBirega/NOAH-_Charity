@@ -20,21 +20,12 @@ module.exports = new EntitySchema({
   name: 'User',
   tableName: 'users',
   columns: new User(),
-
-  // relations: {
-  //   userAdmin: {
-  //     type: 'many-to-one',
-  //     target: 'UserAdmin',
-  //     inverseSide: 'users',
-  //     onDelete: 'CASCADE',
-  //     onUpdate: 'CASCADE',
-  //   },
-  //   userProfile: {
-  //     type: 'many-to-one',
-  //     target: 'UserProfile',
-  //     inverseSide: 'users',
-  //     onDelete: 'CASCADE',
-  //     onUpdate: 'CASCADE',
-  //   },
-  // },
+  relations: {
+    users: {
+      target: 'User', // Target entity name
+      type: 'one-to-many', // Type of relationship
+      joinColumn: true, // Indicates if this side of the relationship will contain the join column(s)
+      inverseSide: 'voluntery', // Name of the inverse side property (optional)
+    },
+  },
 });

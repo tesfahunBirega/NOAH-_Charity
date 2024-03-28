@@ -14,4 +14,12 @@ module.exports = new EntitySchema({
   name: 'Voluntery',
   tableName: 'volunterys',
   columns: new Voluntery(),
+  relations: {
+    users: {
+      target: 'User', // Target entity name
+      type: 'one-to-many', // Type of relationship
+      joinColumn: true, // Indicates if this side of the relationship will contain the join column(s)
+      inverseSide: 'voluntery', // Name of the inverse side property (optional)
+    },
+  },
 });
