@@ -7,10 +7,16 @@ const { emailService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   try {
+    const image = req.file ? req.file.filename : null;
     const { fullName, phone, email, password, role, country, volenteerTypeId } = req.body;
-    const user = await userService.createUser({ fullName, phone, email, password, role, country, volenteerTypeId });
+    const user = await userService.createUser({ fullName, phone, email, password, role, country, volenteerTypeId, image });
+    const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${image}`;
 
-    res.status(httpStatus.CREATED).send(user);
+    res.status(httpStatus.CREATED).json({
+      status: 'Success',
+      imageUrl: imageUrl,
+      user: user,
+    });
   } catch (error) {
     // Handle any errors that occur during authentication
     res.status(httpStatus.UNAUTHORIZED).send({ error: error.message });
@@ -48,6 +54,7 @@ const getUser = catchAsync(async (req, res) => {
   }
   res.send(post);
 });
+
 const getAllUsers = catchAsync(async (req, res) => {
   const users = await userService.getAllUsers();
   res.send(users);
@@ -79,8 +86,8 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  await userService.deleteUserById(req.params.postId);
-  res.status(httpStatus.NO_CONTENT).send();
+  const user = await userService.deleteUserById(req.params.userId);
+  res.send(user);
 });
 
 const findRole = catchAsync(async (req, res) => {

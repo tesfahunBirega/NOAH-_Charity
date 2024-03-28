@@ -40,7 +40,7 @@ const updateEvent = {
 
 const deleteEvent = {
   params: Joi.object().keys({
-    postId: Joi.string(),
+    eventId: Joi.string(),
   }),
 };
 

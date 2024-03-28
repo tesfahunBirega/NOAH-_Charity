@@ -39,19 +39,28 @@ const getAllVoluntery = async () => {
 const getVolunteryById = async (id) => {
   return volunteryRepository.findOneBy({ id });
 };
-const updateVolunteryById = async (feedbackId, updateBody) => {
-  const feedback = await getVolunteryById(feedbackId);
-  if (!feedback) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Feedback not found');
+const updateVolunteryById = async (volunteryId, updateBody) => {
+  const voluntery = await getVolunteryById(volunteryId);
+  if (!voluntery) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'voluntery not found');
   }
-  const updateResult = await volunteryRepository.update({ id: feedbackId }, updateBody);
-  const updatedFeedback = await getVolunteryById(feedbackId);
+  const updateResult = await volunteryRepository.update({ id: volunteryId }, updateBody);
+  const updatedFeedback = await getVolunteryById(volunteryId);
   return { updatedFeedback };
 };
 
+const deleteVoluntery = async (volunteryId) => {
+  const voluntery = await getVolunteryById(volunteryId);
+  if (!voluntery) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'voluntery not found');
+  }
+  const Voluntery = await volunteryRepository.delete({ id: volunteryId });
+  return Voluntery;
+};
 module.exports = {
   createvoluntery,
   getVolunteryById,
   getAllVoluntery,
   updateVolunteryById,
+  deleteVoluntery,
 };

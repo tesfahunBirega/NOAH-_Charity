@@ -3,12 +3,28 @@ const validate = require('../../middlewares/validate');
 const { Validation } = require('../../validations');
 const { userController } = require('../../controllers');
 // const authMiddleware = require('../../middlewares/authMiddleware');
+const multer = require('multer');
+const path = require('path');
+
+const app = express();
+// const authMiddleware = require('../../middlewares/authMiddleware');
+
+const storage = multer.diskStorage({
+  destination: 'public',
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+const publicDirectoryPath = path.join(__dirname, 'public');
+
+const uploade = multer({ storage });
+app.use('/public', express.static(publicDirectoryPath));
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(validate(Validation.createUser), userController.createUser)
+  .post(validate(Validation.createUser), uploade.single('image'), userController.createUser)
   .get(validate(Validation.getUsers), userController.getAllUsers);
 router.route('/resetPassword').post(userController.resetPassword);
 router.route('/forgetPassword').post(userController.forgetPassword);

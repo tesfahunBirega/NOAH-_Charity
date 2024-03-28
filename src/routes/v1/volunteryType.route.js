@@ -14,6 +14,6 @@ router
 router
   .route('/:volunteryId')
   .get(validate(volunteryValidation.getVoluntery), volunteryTypeController.getVoluntery)
-  .patch(validate(volunteryValidation.updateVoluntery), volunteryTypeController.updateVoluntery);
-// .delete(validate(volunteryValidation.deleteVoluntery), volunteryTypeController.deleteVoluntery);
+  .patch(validate(volunteryValidation.updateVoluntery), volunteryTypeController.updateVoluntery)
+  .delete(volunteryTypeController.deleteVoluntery);
 module.exports = router;

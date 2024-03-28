@@ -13,8 +13,8 @@ const postRepository = dataSource.getRepository(Post).extend({
   findAll,
   sortBy,
 });
-const createEvent = async (name, date, event_time, event_price, charityAddress, image, description) => {
-  const doc = eventRepository.create(name, date, event_time, event_price, charityAddress, image, description);
+const createEvent = async (name, date, event_time, event_price, charityAddress, image, description, eventAddress) => {
+  const doc = eventRepository.create(name, date, event_time, event_price, charityAddress, image, description, eventAddress);
   const result = await eventRepository.save(doc);
   return result;
 };
@@ -32,79 +32,40 @@ const getEventById = async (id) => {
   return result;
 };
 
-const updateEventById = async (postId, updateBody) => {
+const updateEventById = async (eventId, updateBody) => {
   let result;
-  const event = await getEventById(postId);
+  const event = await getEventById(eventId);
   if (!event) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'event not found');
   }
-  const update = await eventRepository.update({ id: postId }, updateBody);
+  const update = await eventRepository.update({ id: eventId }, updateBody);
   if (update) {
-    result = await getEventById(postId);
+    result = await getEventById(eventId);
   } else {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'event not found');
   }
   return result;
 };
 
-const deleteEventById = async (postId) => {
-  const event = await getEventById(postId);
+const deleteEventById = async (eventId) => {
+  const event = await getEventById(eventId);
   if (!event) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'event not found');
   }
-  const result = await eventRepository.delete({ id: postId });
+  const result = await eventRepository.delete({ id: eventId });
   return result;
 };
 
-const createPost = async (postBody) => {
-  const doc = postRepository.create(postBody);
-  const result = await postRepository.save(doc);
-  return result;
+const getEvents = async () => {
+  const event = eventRepository.find();
+  return event;
 };
 
-const queryPosts = async (filter, options) => {
-  const { limit, page } = options;
-
-  const result = await postRepository.findAll({
-    tableName: 'post',
-    sortOptions: sortBy && { option: sortBy },
-    paginationOptions: { limit, page },
-  });
-  return result;
-};
-
-const getPostById = async (id) => {
-  const result = await postRepository.findOneBy({ id });
-  return result;
-};
-
-const updatePostById = async (postId, updateBody) => {
-  const post = await getPostById(postId);
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
-  }
-  await postRepository.update({ id: postId }, updateBody);
-  const result = await getPostById(postId);
-  return result;
-};
-
-const deletePostById = async (postId) => {
-  const post = await getPostById(postId);
-  if (!post) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
-  }
-  const result = await postRepository.delete({ id: postId });
-  return result;
-};
 module.exports = {
   createEvent,
   queryEvents,
   getEventById,
   updateEventById,
   deleteEventById,
-  createPost,
-  queryPosts,
-  getPostById,
-  updatePostById,
-  deletePostById,
+  getEvents,
 };

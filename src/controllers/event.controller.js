@@ -6,8 +6,17 @@ const { eventService } = require('../services');
 
 const createEvent = catchAsync(async (req, res) => {
   const image = req.file ? req.file.filename : null;
-  const { name, date, event_time, event_price, charityAddress, description } = req.body;
-  const post = await eventService.createEvent({ name, date, event_time, event_price, charityAddress, image, description });
+  const { name, date, event_time, event_price, charityAddress, description, eventAddress } = req.body;
+  const post = await eventService.createEvent({
+    name,
+    date,
+    event_time,
+    event_price,
+    charityAddress,
+    image,
+    description,
+    eventAddress,
+  });
   const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${image}`;
 
   // Respond with success and image URL
@@ -20,10 +29,36 @@ const createEvent = catchAsync(async (req, res) => {
 });
 
 const getEvents = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['title']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await eventService.queryEvents(filter, options);
-  res.send(result);
+  try {
+    const event = await eventService.getEvents();
+    // Map each post to include the image URL
+    const eventsWithImageUrl = event.map((event) => {
+      const imageUrl = `${req.protocol}://${req.get('host')}/v1/public/${event.image}`;
+      return {
+        id: event.id,
+        createdAt: event.createdAt,
+        name: event.name,
+        description: event.description,
+        image: event.image,
+        eventAddress: event.eventAddress,
+        date: event.date,
+        event_time: event.event_time,
+        event_price: event.event_price,
+        charityAddress: event.charityAddress,
+        isActive: event.isActive,
+        imageUrl: imageUrl,
+      };
+    });
+
+    // Respond with the posts including image URLs
+    res.status(httpStatus.OK).json({
+      status: 'Success',
+      posts: eventsWithImageUrl,
+    });
+  } catch (error) {
+    // Handle errors
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+  }
 });
 
 const getEvent = catchAsync(async (req, res) => {
@@ -35,12 +70,16 @@ const getEvent = catchAsync(async (req, res) => {
 });
 
 const updateEvent = catchAsync(async (req, res) => {
-  const post = await eventService.updateEventById(req.params.eventId, req.body);
-  res.send(post);
+  if (req.file) {
+    const image = req.file.filename;
+    req.body = image;
+  }
+  const event = await eventService.updateEventById(req.params.eventId, req.body);
+  res.send(event);
 });
 
 const deleteEvent = catchAsync(async (req, res) => {
-  await eventService.deleteEventById(req.params.postId);
+  await eventService.deleteEventById(req.params.eventId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
